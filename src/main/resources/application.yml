@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: library
+  datasource:
+    url: "jdbc:h2:mem:testdb"
+    driver-class-name: org.h2.Driver
+    username: "admin"
+    password: ""
+  jpa:
+    defer-datasource-initialization: true
