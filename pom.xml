@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.uexcel</groupId>
-	<artifactId>card</artifactId>
+	<artifactId>library</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>library</name>
 	<description>Library Management System</description>

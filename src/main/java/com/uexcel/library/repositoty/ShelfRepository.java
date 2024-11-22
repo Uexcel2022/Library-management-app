@@ -1,10 +1,9 @@
 package com.uexcel.library.repositoty;
 
-import com.uexcel.library.Entity.Book;
+import com.uexcel.library.Entity.Shelf;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, String> {
-    Book findByTitle(String genre);
+public interface ShelfRepository extends JpaRepository<Shelf,String> {
 }

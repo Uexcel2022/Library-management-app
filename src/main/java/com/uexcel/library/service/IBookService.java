@@ -1,12 +1,21 @@
 package com.uexcel.library.service;
 
 import com.uexcel.library.dto.BookDto;
-import com.uexcel.library.dto.ResponseDto;
+import com.uexcel.library.dto.LibraryResponseDto;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public interface IBookService {
     /**
-     * @param bookDto  - will hold book properties
+     * @param bookDto - will hold book properties
      * @return - will hold response information
      */
- ResponseDto createBook(BookDto bookDto);
+ LibraryResponseDto createBook(BookDto bookDto);
+
+
+    static String getTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(new Date());
+    }
 }

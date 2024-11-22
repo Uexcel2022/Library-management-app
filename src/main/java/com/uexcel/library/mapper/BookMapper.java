@@ -11,6 +11,10 @@ public class BookMapper{
         book.setEdition(bookDto.getEdition());
         book.setPublishedDate(bookDto.getPublishedDate());
         book.setLanguage(bookDto.getLanguage());
+        book.setPrice(bookDto.getPrice());
+        book.setQuantity(bookDto.getQuantity());
+        book.setBorrowed(bookDto.getBorrowed());
+        book.setAvailable(bookDto.getAvailable());
         return book;
     }
 }

@@ -9,9 +9,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter
-public class libraryResponseDto {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ResponseDto responseDto;
+public class LibraryResponseDto extends ErrorResponseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Book book;
     @JsonInclude(JsonInclude.Include.NON_NULL)

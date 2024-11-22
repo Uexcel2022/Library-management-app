@@ -18,6 +18,10 @@ public class Book {
     private String language;
     private String publishedDate;
     private String edition;
+    private int quantity;
+    private double price;
+    private int borrowed;
+    private int available;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
     private Genre genre;
 }

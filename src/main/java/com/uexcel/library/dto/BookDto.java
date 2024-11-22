@@ -11,5 +11,10 @@ public class BookDto {
     private String language;
     private String edition;
     private String publishedDate;
+    private int quantity;
+    private double price;
+    private int borrowed;
+    private int available;
     private String genre;
+
 }
