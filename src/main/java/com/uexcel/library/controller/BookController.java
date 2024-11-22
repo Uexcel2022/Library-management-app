@@ -5,10 +5,7 @@ import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.service.IBookService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api")
@@ -18,6 +15,11 @@ public class BookController {
     @PostMapping("/create-book")
     public ResponseEntity<LibraryResponseDto> createBooks(@RequestBody BookDto bookDto) {
        LibraryResponseDto lb = bookService.createBook(bookDto);
+        return ResponseEntity.status(lb.getStatus()).body(lb);
+    }
+    @PostMapping("/fetch-book")
+    public ResponseEntity<LibraryResponseDto> fetchBook(@RequestParam String bootTitle) {
+        LibraryResponseDto lb = bookService.fetchBook(bootTitle);
         return ResponseEntity.status(lb.getStatus()).body(lb);
     }
 }

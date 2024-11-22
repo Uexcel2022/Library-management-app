@@ -12,7 +12,8 @@ import java.util.Date;
 @RestControllerAdvice
 public class GlobalException {
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFoundException e, WebRequest webRequest) {
+    public ResponseEntity<ErrorResponseDto>
+    handleResourceNotFoundException(ResourceNotFoundException e, WebRequest webRequest) {
       return   ResponseEntity.status(404).body(
                 new ErrorResponseDto(getTime(),404,"Not Found",
                         e.getMessage(),webRequest.getDescription(false)));

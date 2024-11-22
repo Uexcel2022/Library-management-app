@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @ToString
-public class UserDto {
+public class LibraryUserDto {
     private String id;
     private String firstName;
     private String lastName;

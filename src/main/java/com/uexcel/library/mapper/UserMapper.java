@@ -1,23 +1,23 @@
 package com.uexcel.library.mapper;
 
-import com.uexcel.library.Entity.User;
-import com.uexcel.library.dto.UserDto;
+import com.uexcel.library.Entity.LibraryUser;
+import com.uexcel.library.dto.LibraryUserDto;
 
 public class UserMapper {
-    public static User mapToUser(UserDto userDto, User user) {
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setEmail(userDto.getEmail());
-        return user;
+    public static LibraryUser mapToUser(LibraryUserDto libraryUserDto, LibraryUser libraryUser) {
+        libraryUser.setFirstName(libraryUserDto.getFirstName());
+        libraryUser.setLastName(libraryUserDto.getLastName());
+        libraryUser.setPhoneNumber(libraryUserDto.getPhoneNumber());
+        libraryUser.setEmail(libraryUserDto.getEmail());
+        return libraryUser;
     }
 
-    public static UserDto mapToUserDto(User user, UserDto userDto) {
-        userDto.setId(user.getId());
-        userDto.setFirstName(user.getFirstName());
-        userDto.setLastName(user.getLastName());
-        userDto.setPhoneNumber(user.getPhoneNumber());
-        userDto.setEmail(user.getEmail());
-        return userDto;
+    public static LibraryUserDto mapToUserDto(LibraryUser libraryUser, LibraryUserDto libraryUserDto) {
+        libraryUserDto.setId(libraryUser.getId());
+        libraryUserDto.setFirstName(libraryUser.getFirstName());
+        libraryUserDto.setLastName(libraryUser.getLastName());
+        libraryUserDto.setPhoneNumber(libraryUser.getPhoneNumber());
+        libraryUserDto.setEmail(libraryUser.getEmail());
+        return libraryUserDto;
     }
 }

@@ -1,9 +1,10 @@
 package com.uexcel.library.repositoty;
 
-import com.uexcel.library.Entity.User;
+import com.uexcel.library.Entity.LibraryUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<LibraryUser, String> {
+    LibraryUser findByPhoneNumberOrEmail(String phoneNumber, String email);
 }

@@ -10,7 +10,7 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter @ToString
-public class User {
+public class LibraryUser {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

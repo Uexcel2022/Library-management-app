@@ -3,6 +3,7 @@ package com.uexcel.library.service.impl;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.dto.BookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
+import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.BookMapper;
 import com.uexcel.library.repositoty.BookRepository;
 import com.uexcel.library.service.IBookService;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @AllArgsConstructor
@@ -47,6 +49,21 @@ public class IBookServiceImpl implements IBookService {
         lb.setStatus(201);
         lb.setDescription("Created");
         lb.setMessage("Book created successfully.");
+        lb.setApiPath("uri=/api/create-book");
+        return lb;
+    }
+
+    @Override
+    public LibraryResponseDto fetchBook(String bookTitle) {
+        Book book = bookRepository.findByTitle(bookTitle);
+        LibraryResponseDto lb = new LibraryResponseDto();
+        if(book == null) {
+            throw new ResourceNotFoundException("Book", "bookTitle", bookTitle);
+        }
+        lb.setStatus(200);
+        lb.setDescription("Ok");
+        lb.setBook(book);
+        lb.setApiPath("uri=/api/fetch-book");
         return lb;
     }
 
