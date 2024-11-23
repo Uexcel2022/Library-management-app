@@ -61,7 +61,9 @@ public class IUserServiceImpl implements IUserService {
                 findByPhoneNumberOrEmail(emailOrPhoneNumber, emailOrPhoneNumber);
         LibraryResponseDto lb = new LibraryResponseDto();
         if(lUser == null) {
-            throw new ResourceNotFoundException("User", "email Or PhoneNumber", emailOrPhoneNumber);
+            throw new ResourceNotFoundException(
+                    String.format("User with email or phone number: %s not found.", emailOrPhoneNumber)
+            );
         }
         lb.setStatus(200);
         lb.setDescription("Ok");

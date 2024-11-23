@@ -19,6 +19,14 @@ public class GlobalException {
                         e.getMessage(),webRequest.getDescription(false)));
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponseDto>
+    handleRunningRentException(BadRequestException e, WebRequest webRequest) {
+        return   ResponseEntity.status(400).body(
+                new ErrorResponseDto(getTime(),400,"Bad Request",
+                        e.getMessage(),webRequest.getDescription(false)));
+    }
+
     private String getTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date());

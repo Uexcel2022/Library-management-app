@@ -113,7 +113,7 @@ class IBookServiceImplTest {
         book.setBorrowed(bookDto.getBorrowed());
         book.setAvailable(bookDto.getAvailable());
 
-        when(bookRepository.findByTitle(bookDto.getTitle())).thenReturn(book);
+        when(bookRepository.findByTitleAndAuthor(bookDto.getTitle(), bookDto.getAuthor())).thenReturn(book);
 
         LibraryResponseDto bk = bookServiceImpl.createBook(bookDto);
         assertNotNull(bk.getTimestamp());

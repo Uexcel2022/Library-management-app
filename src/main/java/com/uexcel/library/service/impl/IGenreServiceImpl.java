@@ -16,7 +16,7 @@ public class IGenreServiceImpl implements IGenreService {
     @Override
     public LibraryResponseDto fetchGenreByName(String genreName) {
         Genre genre = genreRepository.findByGenreName(genreName)
-                .orElseThrow(() -> new ResourceNotFoundException("Genre","genreName",genreName));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Genre %s not found.", genreName)));
 
         LibraryResponseDto lb = new LibraryResponseDto();
         lb.setStatus(200);

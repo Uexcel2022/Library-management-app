@@ -26,14 +26,15 @@ public class IBookServiceImpl implements IBookService {
      */
     @Override
     public LibraryResponseDto createBook(BookDto bookDto) {
-        Book bk = bookRepository.findByTitle(bookDto.getTitle());
+        Book bk = bookRepository.findByTitleAndAuthor(bookDto.getTitle(), bookDto.getAuthor());
         LibraryResponseDto lb;
         if (bk != null) {
             lb = new LibraryResponseDto();
             lb.setTimestamp(IBookService.getTime());
             lb.setStatus(302);
             lb.setDescription("Found");
-            lb.setMessage("There is book with the title: " + bookDto.getTitle());
+            lb.setMessage(String.format("There is book with the title: %s  and author: %s "
+                    + bookDto.getTitle(), bookDto.getAuthor()));
             lb.setBook(bk);
             lb.setApiPath("uri=/api/create-book");
             logger.debug("IBookServiceImpl.createBook: Book exists Id: {}",bk.getId());
@@ -54,11 +55,12 @@ public class IBookServiceImpl implements IBookService {
     }
 
     @Override
-    public LibraryResponseDto fetchBook(String bookTitle) {
-        Book book = bookRepository.findByTitle(bookTitle);
+    public LibraryResponseDto fetchBook(String bookTitle,String author) {
+        Book book = bookRepository.findByTitleAndAuthor(bookTitle,author);
         LibraryResponseDto lb = new LibraryResponseDto();
         if(book == null) {
-            throw new ResourceNotFoundException("Book", "bookTitle", bookTitle);
+            throw new ResourceNotFoundException(
+                    String.format("Book with title: %s and author: %s not found.", bookTitle,author));
         }
         lb.setStatus(200);
         lb.setDescription("Ok");

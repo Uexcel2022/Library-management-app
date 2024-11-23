@@ -1,10 +1,10 @@
 package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.Book;
-import com.uexcel.library.Entity.LibraryUser;
 import com.uexcel.library.Entity.RentBook;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.RentBookDto;
+import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.mapper.RentBookMapper;
 import com.uexcel.library.repositoty.RentBookRepository;
 import com.uexcel.library.service.IBookService;
@@ -27,15 +27,25 @@ public class IRentBookImpl implements IRentBookService {
     @Override
     @Transactional
     public LibraryResponseDto createRentBook(RentBookDto rentBookDto) {
+        if(rentBookDto == null){
+            throw new BadRequestException("Input can not be null.");
+        }
+        if(rentBookDto.getQuantity() > 1){
+            throw new BadRequestException("User can only rent one copy at a time.");
+        }
 
         LibraryResponseDto lbu = iUserService.fetchUser(rentBookDto.getPhoneNumber());
-        LibraryResponseDto lb = iBookService.fetchBook(rentBookDto.getBootTile());
+        LibraryResponseDto lb =
+                iBookService.fetchBook(rentBookDto.getBootTile(),rentBookDto.getAuthor());
 
         RentBook rentBook = rentBookRepository
                 .findByLibraryUserAndBookAndReturned(lbu.libraryUser,
                         lb.getBook(),false);
         if (rentBook != null) {
-            throw new RuntimeException("RentBook already exist");
+            throw new BadRequestException(
+                    String.format("You have running rent on this book title: %s and author: %s",
+                            rentBook.getBook().getTitle(),rentBook.getBook().getAuthor())
+            );
         }
 
         Book bk = lb.getBook();
@@ -46,12 +56,15 @@ public class IRentBookImpl implements IRentBookService {
         rb.setPaid(true);
         rb.setBook(bk);
         rb.setLibraryUser(lbu.libraryUser);
-        rentBookRepository.save(rb);
+        RentBook rt = rentBookRepository.save(rb);
         lb.setBook(null);
+        RentBookDto rdt =RentBookMapper.mapToRentBookDto(rt,rentBookDto);
+        rdt.setUserName(lbu.libraryUser.getFirstName() + " " + lbu.libraryUser.getLastName());
         lb.setStatus(201);
-        lb.setDescription("Create");
-        lb.setMessage("Process request successfully.");
-        lb.setApiPath("uri=/api/fetch-user");
+        lb.setDescription("Created");
+        lb.setMessage("Request processed successfully.");
+        lb.setApiPath("uri=/api/rent");
+        lb.setRentBookDto(rdt);
         return lb;
 
     }

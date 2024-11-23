@@ -13,7 +13,7 @@ public interface IBookService {
      */
  LibraryResponseDto createBook(BookDto bookDto);
 
- LibraryResponseDto fetchBook(String bookTitle);
+ LibraryResponseDto fetchBook(String bookTitle,String author);
 
     static String getTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

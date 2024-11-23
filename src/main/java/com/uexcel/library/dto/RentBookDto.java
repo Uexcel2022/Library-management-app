@@ -14,6 +14,7 @@ public class RentBookDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String userName;
     private String bootTile;
+    private String author;
     private int quantity;
     private LocalDate date;
     private LocalDate dueDate;

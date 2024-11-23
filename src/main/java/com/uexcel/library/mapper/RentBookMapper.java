@@ -8,11 +8,11 @@ import java.time.LocalDate;
 
 public class RentBookMapper {
     public static RentBookDto mapToRentBookDto(RentBook rentbook, RentBookDto rentBookDto) {
-        rentBookDto.setBootTile(rentBookDto.getBootTile());
         rentBookDto.setDueDate(rentbook.getDueDate());
         rentBookDto.setDate(rentbook.getDate());
         rentBookDto.setPaid(rentbook.isPaid());
         rentBookDto.setReturned(rentbook.isReturned());
+        rentBookDto.setAmount(rentbook.getAmount());
         return rentBookDto;
     }
 

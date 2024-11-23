@@ -18,8 +18,9 @@ public class BookController {
         return ResponseEntity.status(lb.getStatus()).body(lb);
     }
     @PostMapping("/fetch-book")
-    public ResponseEntity<LibraryResponseDto> fetchBook(@RequestParam String bootTitle) {
-        LibraryResponseDto lb = bookService.fetchBook(bootTitle);
+    public ResponseEntity<LibraryResponseDto> fetchBook(@RequestParam String bootTitle,
+                                                        @RequestParam String author) {
+        LibraryResponseDto lb = bookService.fetchBook(bootTitle,author);
         return ResponseEntity.status(lb.getStatus()).body(lb);
     }
 }
