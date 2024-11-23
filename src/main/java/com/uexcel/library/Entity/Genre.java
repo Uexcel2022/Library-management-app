@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Entity
 @Setter @Getter @ToString
-public class Genre {
+public class Genre extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

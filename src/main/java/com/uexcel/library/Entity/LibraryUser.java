@@ -10,7 +10,7 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter @ToString
-public class LibraryUser {
+public class LibraryUser extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

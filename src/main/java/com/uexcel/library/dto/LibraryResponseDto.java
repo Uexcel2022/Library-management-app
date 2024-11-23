@@ -24,8 +24,8 @@ public class LibraryResponseDto extends ErrorResponseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<LibraryUser> libraryUsers;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public RentBookDto rentBookDto;
+    public RentBookDto rentBook;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<RentBookDto> rentBookDtos;
+    private List<RentBookDto> rentBooks;
 }
 

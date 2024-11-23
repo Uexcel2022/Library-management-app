@@ -64,7 +64,7 @@ public class IRentBookImpl implements IRentBookService {
         lb.setDescription("Created");
         lb.setMessage("Request processed successfully.");
         lb.setApiPath("uri=/api/rent");
-        lb.setRentBookDto(rdt);
+        lb.setRentBook(rdt);
         return lb;
 
     }

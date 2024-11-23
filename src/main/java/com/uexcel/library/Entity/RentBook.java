@@ -10,7 +10,7 @@ import java.time.LocalTime;
 
 @Entity
 @Setter @Getter @ToString
-public class RentBook {
+public class RentBook extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
