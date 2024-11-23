@@ -9,4 +9,6 @@ public interface IRentBookService {
      * @return will return status and message
      */
     LibraryResponseDto createRentBook(RentBookDto rentBookDto);
+
+    LibraryResponseDto returnBook(RentBookDto rentBookDto);
 }

@@ -68,4 +68,38 @@ public class IRentBookImpl implements IRentBookService {
         return lb;
 
     }
+
+    @Override
+    public LibraryResponseDto returnBook(RentBookDto rentBookDto) {
+        if(rentBookDto == null){
+            throw new BadRequestException("Input can not be null.");
+        }
+        LibraryResponseDto lbu = iUserService.fetchUser(rentBookDto.getPhoneNumber());
+        LibraryResponseDto lb =
+                iBookService.fetchBook(rentBookDto.getBootTile(),rentBookDto.getAuthor());
+
+        RentBook rentBook = rentBookRepository
+                .findByLibraryUserAndBookAndReturned(lbu.libraryUser,
+                        lb.getBook(),false);
+        if (rentBook == null) {
+            throw new BadRequestException(
+                    String.format("You do not have a running rent on this book title: %s and author: %s",
+                            rentBook.getBook().getTitle(),rentBook.getBook().getAuthor())
+            );
+        }
+        rentBook.setReturned(true);
+        Book bk = lb.getBook();
+        bk.setBorrowed(bk.getBorrowed()-rentBookDto.getQuantity());
+        bk.setAvailable(bk.getAvailable()+rentBookDto.getQuantity());
+        rentBook.setBook(bk);
+        rentBook.setLibraryUser(lbu.libraryUser);
+        rentBookRepository.save(rentBook);
+
+        lb.setBook(null);
+        lb.setStatus(200);
+        lb.setDescription("Ok");
+        lb.setMessage("Request processed successfully.");
+        lb.setApiPath("uri=/api/return");
+        return lb;
+    }
 }
