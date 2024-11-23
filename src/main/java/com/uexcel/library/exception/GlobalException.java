@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import static com.uexcel.library.service.IBookService.getTime;
 
 @RestControllerAdvice
 public class GlobalException {
@@ -27,8 +26,4 @@ public class GlobalException {
                         e.getMessage(),webRequest.getDescription(false)));
     }
 
-    private String getTime(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(new Date());
-    }
 }
