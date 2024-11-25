@@ -2,6 +2,7 @@ package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.dto.BookDto;
+import com.uexcel.library.dto.DeleteUserBookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.RentBookDto;
 import com.uexcel.library.exception.ResourceNotFoundException;
@@ -105,9 +106,9 @@ public class IBookServiceImpl implements IBookService {
     }
 
     @Override
-    public LibraryResponseDto deleteBook(RentBookDto rentBookDto) {
+    public LibraryResponseDto deleteBook(DeleteUserBookDto deleteUserBookDto) {
        return deleteUserBookRentService
-               .deleteRentBook(rentBookDto,"Book","uri=/api/delete-book");
+               .deleteRentBook(deleteUserBookDto,"Book","uri=/api/delete-book");
 
     }
 

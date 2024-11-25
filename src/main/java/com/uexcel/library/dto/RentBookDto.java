@@ -1,9 +1,7 @@
 package com.uexcel.library.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +21,6 @@ public class RentBookDto {
     private String author;
     @PositiveOrZero(message = "Quantity must be positive or zero")
     private int quantity;
-
     private LocalDate date;
     private LocalDate dueDate;
     @Positive(message = "Amount must be greater than zero")

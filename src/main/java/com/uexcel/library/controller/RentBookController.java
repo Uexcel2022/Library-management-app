@@ -41,8 +41,8 @@ public class RentBookController {
     }
 
     @GetMapping("/fetch-rent")
-    public ResponseEntity<LibraryResponseDto> fetchRent(@RequestParam(required = false) String author,
-                                                        @RequestParam(required = false) String phoneNumber) {
+    public ResponseEntity<LibraryResponseDto> fetchRent(@RequestParam(required = false) String bookId,
+                                                        @RequestParam(required = false) String userId) {
 //        LibraryResponseDto lb = rentBookService.deleteRentBook(rentBookDto);
 //        return ResponseEntity.status(lb.getStatus()).body(lb);
         return null;

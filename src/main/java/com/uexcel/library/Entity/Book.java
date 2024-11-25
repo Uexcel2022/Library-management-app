@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter @Setter @ToString
 public class Book extends BaseEntity{
@@ -16,7 +18,7 @@ public class Book extends BaseEntity{
     private String author;
     private String isbn;
     private String language;
-    private String publishedDate;
+    private LocalDate publishedDate;
     private String edition;
     private int quantity;
     private double price;

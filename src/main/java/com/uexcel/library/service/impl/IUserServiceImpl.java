@@ -1,6 +1,7 @@
 package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.LibraryUser;
+import com.uexcel.library.dto.DeleteUserBookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.LibraryUserDto;
 import com.uexcel.library.dto.RentBookDto;
@@ -75,12 +76,12 @@ public class IUserServiceImpl implements IUserService {
         }
 
     /**
-     * @param rentBookDto - will hold information for deleting user
+     * @param deleteUserBookDto - will hold information for deleting user
      * @return - response status and message
      */
     @Override
-    public LibraryResponseDto deleteUser(RentBookDto rentBookDto) {
+    public LibraryResponseDto deleteUser(DeleteUserBookDto deleteUserBookDto) {
         return deleteUserBookRentService
-                .deleteRentBook(rentBookDto,"User","uri=/api/delete-user");
+                .deleteRentBook(deleteUserBookDto,"User","uri=/api/delete-user");
     }
 }

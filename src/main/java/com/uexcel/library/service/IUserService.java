@@ -1,5 +1,6 @@
 package com.uexcel.library.service;
 
+import com.uexcel.library.dto.DeleteUserBookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.LibraryUserDto;
 import com.uexcel.library.dto.RentBookDto;
@@ -15,9 +16,9 @@ public interface IUserService {
     LibraryResponseDto fetchUser(String emailOrPhoneNumber);
 
     /**
-     * @param rentBookDto - will hold information for deleting user
+     * @param deleteUserBookDto - will hold information for deleting user
      * @return - response status and message
      */
-    LibraryResponseDto deleteUser(RentBookDto rentBookDto);
+    LibraryResponseDto deleteUser(DeleteUserBookDto deleteUserBookDto);
 
 }

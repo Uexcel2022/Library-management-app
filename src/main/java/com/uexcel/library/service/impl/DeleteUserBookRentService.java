@@ -3,6 +3,7 @@ package com.uexcel.library.service.impl;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.Entity.LibraryUser;
 import com.uexcel.library.Entity.RentBook;
+import com.uexcel.library.dto.DeleteUserBookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.RentBookDto;
 import com.uexcel.library.exception.BadRequestException;
@@ -30,8 +31,8 @@ public class DeleteUserBookRentService {
     private final Logger logger = LoggerFactory.getLogger(DeleteUserBookRentService.class);
 
     @Transactional
-    public LibraryResponseDto deleteRentBook(RentBookDto rentBookDto, String resourceName, String apiPath) {
-        if(rentBookDto == null){
+    public LibraryResponseDto deleteRentBook(DeleteUserBookDto deleteUserBookDto, String resourceName, String apiPath) {
+        if(deleteUserBookDto == null){
             throw new BadRequestException("Input can not be null.");
         }
 
@@ -39,10 +40,10 @@ public class DeleteUserBookRentService {
 
         if("Book".equals(resourceName)) {
 
-            Book bk = bookRepository.findByTitleAndAuthor(rentBookDto.getBookTile(), rentBookDto.getAuthor());
+            Book bk = bookRepository.findByTitleAndAuthor(deleteUserBookDto.getBookTile(), deleteUserBookDto.getAuthor());
             if (bk == null) {
                 throw new ResourceNotFoundException(String.format("Book with title: %s and book author: %s not found.",
-                        rentBookDto.getBookTile(), rentBookDto.getAuthor()));
+                        deleteUserBookDto.getBookTile(), deleteUserBookDto.getAuthor()));
             }
 
            rb = rentBookRepository.findByBook(bk);
@@ -58,10 +59,10 @@ public class DeleteUserBookRentService {
         }
 
         if("User".equals(resourceName)) {
-            LibraryUser user = userRepository.findByPhoneNumber(rentBookDto.getPhoneNumber());
+            LibraryUser user = userRepository.findByPhoneNumber(deleteUserBookDto.getPhoneNumber());
             if (user == null) {
                 throw new ResourceNotFoundException(String.format("User with phone number: %s not found."
-                        ,rentBookDto.getPhoneNumber()));
+                        ,deleteUserBookDto.getPhoneNumber()));
             }
             rb = rentBookRepository.findByLibraryUser(user);
             if (rb.isEmpty()) {
