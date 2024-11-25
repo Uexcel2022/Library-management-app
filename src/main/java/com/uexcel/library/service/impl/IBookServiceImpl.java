@@ -3,6 +3,7 @@ package com.uexcel.library.service.impl;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.dto.BookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
+import com.uexcel.library.dto.RentBookDto;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.BookMapper;
 import com.uexcel.library.repositoty.BookRepository;
@@ -13,12 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @AllArgsConstructor
 public class IBookServiceImpl implements IBookService {
     private final BookRepository bookRepository;
     private final IGenreService genreService;
+    private final DeleteUserBookRentService deleteUserBookRentService;
     private final Logger logger = LoggerFactory.getLogger(IBookServiceImpl.class);
     /**
      * @param bookDto - will hold book properties
@@ -33,8 +37,8 @@ public class IBookServiceImpl implements IBookService {
             lb.setTimestamp(IBookService.getTime());
             lb.setStatus(302);
             lb.setDescription("Found");
-            lb.setMessage(String.format("There is book with the title: %s  and author: %s "
-                    + bookDto.getTitle(), bookDto.getAuthor()));
+            lb.setMessage(String.format("There is book with the title: %s  and author: %s ",
+                    bookDto.getTitle(), bookDto.getAuthor()));
             lb.setBook(bk);
             lb.setApiPath("uri=/api/create-book");
             logger.debug("IBookServiceImpl.createBook: Book exists Id: {}",bk.getId());
@@ -54,8 +58,7 @@ public class IBookServiceImpl implements IBookService {
         return lb;
     }
 
-    @Override
-    public LibraryResponseDto fetchBook(String bookTitle,String author) {
+    public LibraryResponseDto fetchBook(String bookTitle, String author) {
         Book book = bookRepository.findByTitleAndAuthor(bookTitle,author);
         LibraryResponseDto lb = new LibraryResponseDto();
         if(book == null) {
@@ -63,10 +66,49 @@ public class IBookServiceImpl implements IBookService {
                     String.format("Book with title: %s and author: %s not found.", bookTitle,author));
         }
         lb.setStatus(200);
-        lb.setDescription("Ok");
+        lb.setDescription("ok");
         lb.setBook(book);
         lb.setApiPath("uri=/api/fetch-book");
         return lb;
+    }
+
+    @Override
+    public LibraryResponseDto updateBook(BookDto bookDto) {
+        return null;
+    }
+
+
+
+    @Override
+    public LibraryResponseDto fetchAllBooks(String author, String genre) {
+        List<Book> books = bookRepository.findAll();
+        List<Book> booklist;
+
+        if(!books.isEmpty() && genre != null) {
+            booklist = books.stream()
+                    .filter(vr->vr.getGenre().getGenreName().equals(genre)).toList();
+        }else {
+            if (!books.isEmpty() && author != null) {
+                booklist = books.stream()
+                        .filter(vr -> vr.getAuthor().equals(author)).toList();
+            }else {
+                booklist = books;
+            }
+        }
+        LibraryResponseDto lb = new LibraryResponseDto();
+        lb.setTimestamp(IBookService.getTime());
+        lb.setStatus(200);
+        lb.setDescription("ok");
+        lb.setBooks(booklist);
+        lb.setApiPath("uri=/api/fetch-all-books");
+        return lb;
+    }
+
+    @Override
+    public LibraryResponseDto deleteBook(RentBookDto rentBookDto) {
+       return deleteUserBookRentService
+               .deleteRentBook(rentBookDto,"Book","uri=/api/delete-book");
+
     }
 
 }

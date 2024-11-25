@@ -22,6 +22,6 @@ public class Book extends BaseEntity{
     private double price;
     private int borrowed;
     private int available;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, optional = false)
     private Genre genre;
 }

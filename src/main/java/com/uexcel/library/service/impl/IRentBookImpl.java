@@ -5,6 +5,7 @@ import com.uexcel.library.Entity.RentBook;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.RentBookDto;
 import com.uexcel.library.exception.BadRequestException;
+import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.RentBookMapper;
 import com.uexcel.library.repositoty.RentBookRepository;
 import com.uexcel.library.service.IBookService;
@@ -12,7 +13,13 @@ import com.uexcel.library.service.IRentBookService;
 import com.uexcel.library.service.IUserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.uexcel.library.service.IBookService.getTime;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +31,7 @@ public class IRentBookImpl implements IRentBookService {
      * @param rentBookDto - will contain book rent info
      * @return will return status and message
      */
+    private final Logger logger = LoggerFactory.getLogger(IRentBookImpl.class);
     @Override
     @Transactional
     public LibraryResponseDto createRentBook(RentBookDto rentBookDto) {
@@ -36,7 +44,7 @@ public class IRentBookImpl implements IRentBookService {
 
         LibraryResponseDto lbu = iUserService.fetchUser(rentBookDto.getPhoneNumber());
         LibraryResponseDto lb =
-                iBookService.fetchBook(rentBookDto.getBootTile(),rentBookDto.getAuthor());
+                iBookService.fetchBook(rentBookDto.getBookTile(),rentBookDto.getAuthor());
 
         RentBook rentBook = rentBookRepository
                 .findByLibraryUserAndBookAndReturned(lbu.libraryUser,
@@ -44,7 +52,7 @@ public class IRentBookImpl implements IRentBookService {
         if (rentBook != null) {
             throw new BadRequestException(
                     String.format("You have running rent on this book title: %s and author: %s",
-                            rentBook.getBook().getTitle(),rentBook.getBook().getAuthor())
+                            rentBookDto.getBookTile(),rentBookDto.getAuthor())
             );
         }
 
@@ -62,7 +70,7 @@ public class IRentBookImpl implements IRentBookService {
         rdt.setUserName(lbu.libraryUser.getFirstName() + " " + lbu.libraryUser.getLastName());
         lb.setStatus(201);
         lb.setDescription("Created");
-        lb.setMessage("Request processed successfully.");
+        lb.setMessage("Book rent details created successfully.");
         lb.setApiPath("uri=/api/rent");
         lb.setRentBook(rdt);
         return lb;
@@ -76,15 +84,17 @@ public class IRentBookImpl implements IRentBookService {
         }
         LibraryResponseDto lbu = iUserService.fetchUser(rentBookDto.getPhoneNumber());
         LibraryResponseDto lb =
-                iBookService.fetchBook(rentBookDto.getBootTile(),rentBookDto.getAuthor());
+                iBookService.fetchBook(rentBookDto.getBookTile(),rentBookDto.getAuthor());
+
 
         RentBook rentBook = rentBookRepository
                 .findByLibraryUserAndBookAndReturned(lbu.libraryUser,
                         lb.getBook(),false);
+
         if (rentBook == null) {
             throw new BadRequestException(
                     String.format("You do not have a running rent on this book title: %s and author: %s",
-                            rentBook.getBook().getTitle(),rentBook.getBook().getAuthor())
+                            rentBookDto.getBookTile(),rentBookDto.getAuthor())
             );
         }
         rentBook.setReturned(true);
@@ -98,8 +108,72 @@ public class IRentBookImpl implements IRentBookService {
         lb.setBook(null);
         lb.setStatus(200);
         lb.setDescription("Ok");
-        lb.setMessage("Request processed successfully.");
+        lb.setMessage("Book rent details updated successfully.");
         lb.setApiPath("uri=/api/return");
         return lb;
     }
+
+    @Override
+    @Transactional
+    public LibraryResponseDto deleteRentBook(RentBookDto rentBookDto, String resourceName) {
+
+        if(rentBookDto == null){
+            throw new BadRequestException("Input can not be null.");
+        }
+        LibraryResponseDto lb = iBookService.
+                fetchBook(rentBookDto.getBookTile(),rentBookDto.getAuthor());
+        List<RentBook> bk = rentBookRepository.findByBook(lb.getBook());
+        if (bk.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    resourceName+" not found given input data bookId" + lb.getBook().getId());
+        }
+        List<RentBook> runningRent = bk.stream().filter(vr->vr.isReturned()==false).toList();
+
+        if (!runningRent.isEmpty()) {
+           throw  new BadRequestException (resourceName+" could not be deleted because it has running rent.");
+        }
+
+        rentBookRepository.deleteByBook(lb.getBook());
+        lb.setBook(null);
+        return setResponse(lb);
+    }
+
+
+    @Override
+    public LibraryResponseDto deleteRentBook(String id) {
+        List<RentBook> rentBooks = rentBookRepository.findAll();
+        LibraryResponseDto lb = new LibraryResponseDto();
+        if(!rentBooks.isEmpty() && id == null) {
+            lb.setTimestamp(getTime());
+            lb.setStatus(200);
+            lb.setDescription("Ok");
+            lb.setRentedBooks(rentBooks);
+            return setResponse(lb);
+        }
+
+        if(id != null) {
+            rentBookRepository.deleteById(id);
+            lb.setTimestamp(getTime());
+            lb.setStatus(200);
+            lb.setDescription("Ok");
+            lb.setRentedBooks(rentBookRepository.findAll());
+            return setResponse(lb);
+        }
+
+        throw  new  ResourceNotFoundException("There is no book rent details available.");
+
+    }
+
+
+    private LibraryResponseDto setResponse(LibraryResponseDto lb) {
+        lb.setBook(null);
+        lb.setTimestamp(getTime());
+        lb.setStatus(200);
+        lb.setDescription("Ok");
+        lb.setMessage("Book rent details deleted successfully.");
+        lb.setApiPath("uri=/api/delete-rent");
+        return lb;
+
+    }
+
 }

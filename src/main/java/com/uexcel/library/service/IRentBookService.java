@@ -11,4 +11,10 @@ public interface IRentBookService {
     LibraryResponseDto createRentBook(RentBookDto rentBookDto);
 
     LibraryResponseDto returnBook(RentBookDto rentBookDto);
+
+    LibraryResponseDto deleteRentBook(RentBookDto rentBookDto, String resourceName);
+
+//    LibraryResponseDto deleteRentBook(RentBookDto rentBookDto);
+
+    LibraryResponseDto deleteRentBook(String id);
 }

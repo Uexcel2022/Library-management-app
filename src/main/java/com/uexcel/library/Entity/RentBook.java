@@ -20,9 +20,9 @@ public class RentBook extends BaseEntity {
     private LocalDate dueDate;
     private LocalDate date;
     private double amount;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Book book;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private LibraryUser libraryUser;
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.Entity.Genre;
 import com.uexcel.library.Entity.LibraryUser;
+import com.uexcel.library.Entity.RentBook;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,5 +28,7 @@ public class LibraryResponseDto extends ErrorResponseDto {
     public RentBookDto rentBook;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<RentBookDto> rentBooks;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<RentBook> rentedBooks;
 }
 
