@@ -1,9 +1,8 @@
 package com.uexcel.library.controller;
 
-import com.uexcel.library.dto.DeleteUserBookDto;
+import com.uexcel.library.dto.UserBookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.LibraryUserDto;
-import com.uexcel.library.dto.RentBookDto;
 import com.uexcel.library.service.IUserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,8 +30,8 @@ public class LibraryUserController {
     }
 
     @DeleteMapping("/delete-user")
-    public ResponseEntity<LibraryResponseDto> deleteUser(@Valid @RequestBody DeleteUserBookDto deleteUserBookDto){
-        LibraryResponseDto lib = userService.deleteUser(deleteUserBookDto);
+    public ResponseEntity<LibraryResponseDto> deleteUser(@Valid @RequestBody UserBookDto userBookDto){
+        LibraryResponseDto lib = userService.deleteUser(userBookDto);
         return ResponseEntity.status(lib.getStatus()).body(lib);
     }
 }

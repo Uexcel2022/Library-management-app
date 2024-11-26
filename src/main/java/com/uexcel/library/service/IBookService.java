@@ -1,9 +1,8 @@
 package com.uexcel.library.service;
 
 import com.uexcel.library.dto.BookDto;
-import com.uexcel.library.dto.DeleteUserBookDto;
+import com.uexcel.library.dto.UserBookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
-import com.uexcel.library.dto.RentBookDto;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +25,7 @@ public interface IBookService {
 
 LibraryResponseDto fetchAllBooks(String author, String genre);
 
- LibraryResponseDto deleteBook(DeleteUserBookDto deleteUserBookDto);
+ LibraryResponseDto deleteBook(UserBookDto userBookDto);
 
     static String getTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

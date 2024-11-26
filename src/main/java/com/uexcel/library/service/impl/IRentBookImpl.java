@@ -1,9 +1,11 @@
 package com.uexcel.library.service.impl;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.uexcel.library.Entity.Book;
-import com.uexcel.library.Entity.RentBook;
+import com.uexcel.library.Entity.BookRent;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.RentBookDto;
+import com.uexcel.library.dto.UserBookDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.RentBookMapper;
@@ -13,8 +15,6 @@ import com.uexcel.library.service.IRentBookService;
 import com.uexcel.library.service.IUserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,10 +31,9 @@ public class IRentBookImpl implements IRentBookService {
      * @param rentBookDto - will contain book rent info
      * @return will return status and message
      */
-    private final Logger logger = LoggerFactory.getLogger(IRentBookImpl.class);
     @Override
     @Transactional
-    public LibraryResponseDto createRentBook(RentBookDto rentBookDto) {
+    public LibraryResponseDto createBookRentDetails(RentBookDto rentBookDto) {
         if(rentBookDto == null){
             throw new BadRequestException("Input can not be null.");
         }
@@ -44,27 +43,27 @@ public class IRentBookImpl implements IRentBookService {
 
         LibraryResponseDto lbu = iUserService.fetchUser(rentBookDto.getPhoneNumber());
         LibraryResponseDto lb =
-                iBookService.fetchBook(rentBookDto.getBookTile(),rentBookDto.getAuthor());
+                iBookService.fetchBook(rentBookDto.getTitle(),rentBookDto.getAuthor());
 
-        RentBook rentBook = rentBookRepository
+        BookRent bookRent = rentBookRepository
                 .findByLibraryUserAndBookAndReturned(lbu.libraryUser,
                         lb.getBook(),false);
-        if (rentBook != null) {
+        if (bookRent != null) {
             throw new BadRequestException(
                     String.format("You have running rent on this book title: %s and author: %s",
-                            rentBookDto.getBookTile(),rentBookDto.getAuthor())
+                            rentBookDto.getTitle(),rentBookDto.getAuthor())
             );
         }
 
         Book bk = lb.getBook();
         bk.setBorrowed(bk.getBorrowed()+rentBookDto.getQuantity());
         bk.setAvailable(bk.getAvailable()-rentBookDto.getQuantity());
-        RentBook rb = RentBookMapper.mapToRentBook(rentBookDto,new RentBook());
+        BookRent rb = RentBookMapper.mapToRentBook(rentBookDto,new BookRent());
         rb.setAmount(bk.getPrice());
         rb.setPaid(true);
         rb.setBook(bk);
         rb.setLibraryUser(lbu.libraryUser);
-        RentBook rt = rentBookRepository.save(rb);
+        BookRent rt = rentBookRepository.save(rb);
         lb.setBook(null);
         RentBookDto rdt =RentBookMapper.mapToRentBookDto(rt,rentBookDto);
         rdt.setUserName(lbu.libraryUser.getFirstName() + " " + lbu.libraryUser.getLastName());
@@ -78,32 +77,32 @@ public class IRentBookImpl implements IRentBookService {
     }
 
     @Override
-    public LibraryResponseDto returnBook(RentBookDto rentBookDto) {
-        if(rentBookDto == null){
+    public LibraryResponseDto returnBook(UserBookDto userBookDto) {
+        if(userBookDto == null){
             throw new BadRequestException("Input can not be null.");
         }
-        LibraryResponseDto lbu = iUserService.fetchUser(rentBookDto.getPhoneNumber());
+        LibraryResponseDto lbu = iUserService.fetchUser(userBookDto.getPhoneNumber());
         LibraryResponseDto lb =
-                iBookService.fetchBook(rentBookDto.getBookTile(),rentBookDto.getAuthor());
+                iBookService.fetchBook(userBookDto.getTitle(),userBookDto.getAuthor());
 
 
-        RentBook rentBook = rentBookRepository
+        BookRent bookRent = rentBookRepository
                 .findByLibraryUserAndBookAndReturned(lbu.libraryUser,
                         lb.getBook(),false);
 
-        if (rentBook == null) {
+        if (bookRent == null) {
             throw new BadRequestException(
                     String.format("You do not have a running rent on this book title: %s and author: %s",
-                            rentBookDto.getBookTile(),rentBookDto.getAuthor())
+                            userBookDto.getTitle(),userBookDto.getAuthor())
             );
         }
-        rentBook.setReturned(true);
+        bookRent.setReturned(true);
         Book bk = lb.getBook();
-        bk.setBorrowed(bk.getBorrowed()-rentBookDto.getQuantity());
-        bk.setAvailable(bk.getAvailable()+rentBookDto.getQuantity());
-        rentBook.setBook(bk);
-        rentBook.setLibraryUser(lbu.libraryUser);
-        rentBookRepository.save(rentBook);
+        bk.setBorrowed(bk.getBorrowed()- bookRent.getQuantity());
+        bk.setAvailable(bk.getAvailable()+ bookRent.getQuantity());
+        bookRent.setBook(bk);
+        bookRent.setLibraryUser(lbu.libraryUser);
+        rentBookRepository.save(bookRent);
 
         lb.setBook(null);
         lb.setStatus(200);
@@ -115,19 +114,19 @@ public class IRentBookImpl implements IRentBookService {
 
     @Override
     @Transactional
-    public LibraryResponseDto deleteRentBook(RentBookDto rentBookDto, String resourceName) {
+    public LibraryResponseDto deleteRentBook(UserBookDto userBookDto, String resourceName) {
 
-        if(rentBookDto == null){
+        if(userBookDto == null){
             throw new BadRequestException("Input can not be null.");
         }
         LibraryResponseDto lb = iBookService.
-                fetchBook(rentBookDto.getBookTile(),rentBookDto.getAuthor());
-        List<RentBook> bk = rentBookRepository.findByBook(lb.getBook());
+                fetchBook(userBookDto.getTitle(),userBookDto.getAuthor());
+        List<BookRent> bk = rentBookRepository.findByBook(lb.getBook());
         if (bk.isEmpty()) {
             throw new ResourceNotFoundException(
                     resourceName+" not found given input data bookId" + lb.getBook().getId());
         }
-        List<RentBook> runningRent = bk.stream().filter(vr->vr.isReturned()==false).toList();
+        List<BookRent> runningRent = bk.stream().filter(vr->vr.isReturned()==false).toList();
 
         if (!runningRent.isEmpty()) {
            throw  new BadRequestException (resourceName+" could not be deleted because it has running rent.");
@@ -141,17 +140,17 @@ public class IRentBookImpl implements IRentBookService {
 
     @Override
     public LibraryResponseDto deleteRentBook(String id) {
-        List<RentBook> rentBooks = rentBookRepository.findAll();
+        List<BookRent> bookRents = rentBookRepository.findAll();
         LibraryResponseDto lb = new LibraryResponseDto();
-        if(!rentBooks.isEmpty() && id == null) {
+        if(!bookRents.isEmpty() && id == null) {
             lb.setTimestamp(getTime());
             lb.setStatus(200);
             lb.setDescription("Ok");
-            lb.setRentedBooks(rentBooks);
+            lb.setRentedBooks(bookRents);
             return setResponse(lb);
         }
 
-        if(id != null) {
+        if(!bookRents.isEmpty() && id != null ) {
             rentBookRepository.deleteById(id);
             lb.setTimestamp(getTime());
             lb.setStatus(200);
@@ -162,6 +161,72 @@ public class IRentBookImpl implements IRentBookService {
 
         throw  new  ResourceNotFoundException("There is no book rent details available.");
 
+    }
+
+    public LibraryResponseDto fetchRentBook(String bookId,String phoneNumber, boolean returned) {
+
+        LibraryResponseDto lb = new LibraryResponseDto();
+        List<BookRent> rents = rentBookRepository.findAll();
+        if (rents.isEmpty()) {
+            throw new ResourceNotFoundException("There is no book rent details available.");
+        }
+
+        if(bookId!=null && returned) {
+          List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
+                  .equals(bookId) && vr.isReturned()).toList();
+          lb.setRentedBooks(rt);
+          return getResponse(lb);
+        }
+
+        if(phoneNumber!=null && returned) {
+            List<BookRent> rt = rents.stream()
+                    .filter(vr-> vr.getLibraryUser()
+                            .getPhoneNumber().equals(phoneNumber)&&
+                            vr.isReturned()).toList();
+            lb.setRentedBooks(rt);
+            return getResponse(lb);
+        }
+
+        if(bookId!=null && !returned) {
+            List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
+                    .equals(bookId) && !vr.isReturned()).toList();
+            lb.setRentedBooks(rt);
+            return getResponse(lb);
+        }
+
+        if(phoneNumber != null && !returned) {
+            List<BookRent> rt = rents.stream()
+                    .filter(vr-> vr.getLibraryUser()
+                            .getPhoneNumber().equals(phoneNumber)&& !vr.isReturned()).toList();
+            lb.setRentedBooks(rt);
+            return getResponse(lb);
+        }
+
+        if(bookId!=null && phoneNumber != null) {
+            List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
+                    .equals(bookId) && vr.getLibraryUser().getPhoneNumber().equals(phoneNumber)).toList();
+            lb.setRentedBooks(rt);
+            return getResponse(lb);
+        }
+
+        if(bookId!=null && phoneNumber != null && returned) {
+            List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
+                    .equals(bookId) && vr.getLibraryUser()
+                    .getPhoneNumber().equals(phoneNumber) && vr.isReturned()).toList();
+            lb.setRentedBooks(rt);
+            return getResponse(lb);
+        }
+
+        lb.setRentedBooks(rents);
+        return getResponse(lb);
+    }
+
+
+    private  LibraryResponseDto getResponse (LibraryResponseDto lb){
+        lb.setTimestamp(getTime());
+        lb.setStatus(200);
+        lb.setDescription("Ok");
+        return lb;
     }
 
 

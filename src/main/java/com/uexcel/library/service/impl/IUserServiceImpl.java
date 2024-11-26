@@ -1,10 +1,9 @@
 package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.LibraryUser;
-import com.uexcel.library.dto.DeleteUserBookDto;
+import com.uexcel.library.dto.UserBookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.LibraryUserDto;
-import com.uexcel.library.dto.RentBookDto;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.UserMapper;
 import com.uexcel.library.repositoty.UserRepository;
@@ -76,12 +75,12 @@ public class IUserServiceImpl implements IUserService {
         }
 
     /**
-     * @param deleteUserBookDto - will hold information for deleting user
+     * @param userBookDto - will hold information for deleting user
      * @return - response status and message
      */
     @Override
-    public LibraryResponseDto deleteUser(DeleteUserBookDto deleteUserBookDto) {
+    public LibraryResponseDto deleteUser(UserBookDto userBookDto) {
         return deleteUserBookRentService
-                .deleteRentBook(deleteUserBookDto,"User","uri=/api/delete-user");
+                .deleteRentBook(userBookDto,"User","uri=/api/delete-user");
     }
 }

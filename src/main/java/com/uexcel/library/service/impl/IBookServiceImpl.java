@@ -2,9 +2,8 @@ package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.dto.BookDto;
-import com.uexcel.library.dto.DeleteUserBookDto;
+import com.uexcel.library.dto.UserBookDto;
 import com.uexcel.library.dto.LibraryResponseDto;
-import com.uexcel.library.dto.RentBookDto;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.BookMapper;
 import com.uexcel.library.repositoty.BookRepository;
@@ -59,12 +58,12 @@ public class IBookServiceImpl implements IBookService {
         return lb;
     }
 
-    public LibraryResponseDto fetchBook(String bookTitle, String author) {
-        Book book = bookRepository.findByTitleAndAuthor(bookTitle,author);
+    public LibraryResponseDto fetchBook(String title, String author) {
+        Book book = bookRepository.findByTitleAndAuthor(title,author);
         LibraryResponseDto lb = new LibraryResponseDto();
         if(book == null) {
             throw new ResourceNotFoundException(
-                    String.format("Book with title: %s and author: %s not found.", bookTitle,author));
+                    String.format("Book with title: %s and author: %s not found.", title,author));
         }
         lb.setStatus(200);
         lb.setDescription("ok");
@@ -106,9 +105,9 @@ public class IBookServiceImpl implements IBookService {
     }
 
     @Override
-    public LibraryResponseDto deleteBook(DeleteUserBookDto deleteUserBookDto) {
+    public LibraryResponseDto deleteBook(UserBookDto userBookDto) {
        return deleteUserBookRentService
-               .deleteRentBook(deleteUserBookDto,"Book","uri=/api/delete-book");
+               .deleteRentBook(userBookDto,"Book","uri=/api/delete-book");
 
     }
 

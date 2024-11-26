@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.Entity.Genre;
 import com.uexcel.library.Entity.LibraryUser;
-import com.uexcel.library.Entity.RentBook;
+import com.uexcel.library.Entity.BookRent;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter @Setter
+
 public class LibraryResponseDto extends ErrorResponseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Book book;
@@ -28,7 +29,6 @@ public class LibraryResponseDto extends ErrorResponseDto {
     public RentBookDto rentBook;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<RentBookDto> rentBooks;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<RentBook> rentedBooks;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<BookRent> rentedBooks;
 }
-

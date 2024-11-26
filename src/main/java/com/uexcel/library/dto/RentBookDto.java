@@ -16,7 +16,7 @@ public class RentBookDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String userName;
     @Pattern(regexp = "[A-Za-z0-9 ]+",message = "Title is a required field")
-    private String bookTile;
+    private String title;
     @Pattern(regexp = "[A-Za-z ]+",message = "Author is a required field")
     private String author;
     @PositiveOrZero(message = "Quantity must be positive or zero")

@@ -2,7 +2,7 @@ package com.uexcel.library.repositoty;
 
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.Entity.LibraryUser;
-import com.uexcel.library.Entity.RentBook;
+import com.uexcel.library.Entity.BookRent;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,14 +12,14 @@ import java.util.List;
 
 
 @Repository
-public interface RentBookRepository extends JpaRepository<RentBook,String> {
-    RentBook findByLibraryUserAndBookAndReturned(LibraryUser user, Book book, boolean returned);
+public interface RentBookRepository extends JpaRepository<BookRent,String> {
+    BookRent findByLibraryUserAndBookAndReturned(LibraryUser user, Book book, boolean returned);
     @Modifying
     @Transactional
     void deleteByBook(Book bk);
 
-    List<RentBook> findByBook(Book book);
-    List<RentBook> findByLibraryUser(LibraryUser user);
+    List<BookRent> findByBook(Book book);
+    List<BookRent> findByLibraryUser(LibraryUser user);
 
      @Modifying
      @Transactional

@@ -6,11 +6,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @Setter @Getter @ToString
-public class RentBook extends BaseEntity {
+public class BookRent extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
