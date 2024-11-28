@@ -100,7 +100,7 @@ public class DeleteUserBookRentService {
 
 
     private void checkForRunningRent(List<BookRent> bookRents, String resourceName){
-        List<BookRent> runningRent = bookRents.stream().filter(vr->vr.isReturned()==false).toList();
+        List<BookRent> runningRent = bookRents.stream().filter(vr->!vr.isReturned()).toList();
 
         if (!runningRent.isEmpty()) {
             throw  new BadRequestException (resourceName +" could not be deleted because of the running rent.");
