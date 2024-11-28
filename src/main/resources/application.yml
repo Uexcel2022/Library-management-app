@@ -8,6 +8,14 @@ spring:
     password: ""
   jpa:
     defer-datasource-initialization: true
+
+
+springdoc:
+  swagger-ui:
+    path=/swagger-ui:
+      html:
+
 logging:
   level:
     com.uexcel: DEBUG
+

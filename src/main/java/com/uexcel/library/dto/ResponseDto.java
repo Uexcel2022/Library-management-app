@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-public class ErrorResponseDto {
+public class ResponseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String timestamp;
     private int status;

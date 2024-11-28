@@ -21,7 +21,7 @@ public class BookRent extends BaseEntity {
     private double amount;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Book book;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     private LibraryUser libraryUser;
 
 }

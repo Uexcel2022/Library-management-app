@@ -1,25 +1,24 @@
 package com.uexcel.library.service;
 
-import com.uexcel.library.dto.LibraryResponseDto;
-import com.uexcel.library.dto.RentBookDto;
-import com.uexcel.library.dto.UserBookDto;
+import com.uexcel.library.dto.*;
+
+import java.util.List;
 
 public interface IRentBookService {
     /**
-     * @param rentBookDto - will contain book rent info
+     * @param bookRentRequestDto - will contain book rent info
      * @return will return status and message
      */
-    LibraryResponseDto createBookRentDetails(RentBookDto rentBookDto);
+    BookRentDto createBookRentDetails(BookRentRequestDto bookRentRequestDto);
 
     /**
      * @param userBookDto - contains booking information
      * @return return response status and body
      */
-    LibraryResponseDto returnBook(UserBookDto userBookDto);
+    ResponseDto returnBook(UserBookDto userBookDto);
 
-    LibraryResponseDto deleteRentBook(UserBookDto userBookDto, String resourceName);
+    ResponseDto deleteRentBook(UserBookDto userBookDto, String resourceName);
 
-    LibraryResponseDto fetchRentBook(String bookId,String phoneNumber, boolean returned);
+    List<BookRentDto> fetchRentBook(String bookId, String phoneNumber, boolean returned, String rentId);
 
-    LibraryResponseDto deleteRentBook(String id);
 }

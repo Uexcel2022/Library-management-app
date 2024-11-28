@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @Entity
 @Setter @Getter @ToString
 public class Genre extends BaseEntity {

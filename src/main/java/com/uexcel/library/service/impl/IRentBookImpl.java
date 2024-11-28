@@ -1,94 +1,97 @@
 package com.uexcel.library.service.impl;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.Entity.BookRent;
-import com.uexcel.library.dto.LibraryResponseDto;
-import com.uexcel.library.dto.RentBookDto;
-import com.uexcel.library.dto.UserBookDto;
+import com.uexcel.library.Entity.LibraryUser;
+import com.uexcel.library.dto.*;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.RentBookMapper;
-import com.uexcel.library.repositoty.RentBookRepository;
-import com.uexcel.library.service.IBookService;
+import com.uexcel.library.repositoty.BookRentRepository;
+import com.uexcel.library.repositoty.BookRepository;
+import com.uexcel.library.repositoty.LibraryUserRepository;
 import com.uexcel.library.service.IRentBookService;
-import com.uexcel.library.service.IUserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.uexcel.library.service.IBookService.getTime;
+import static com.uexcel.library.service.IBookService.validateBookNotNull;
+import static com.uexcel.library.service.ILibraryUserService.validateUserNotNull;
 
 @Service
 @AllArgsConstructor
 public class IRentBookImpl implements IRentBookService {
-    private final RentBookRepository rentBookRepository;
-    private IBookService iBookService;
-    private IUserService iUserService;
+    private final BookRentRepository bookRentRepository;
+    private final BookRepository bookRepository;
+    private final LibraryUserRepository libraryUserRepository;
     /**
-     * @param rentBookDto - will contain book rent info
+     * @param bookRentRequestDto - will contain book rent info
      * @return will return status and message
      */
     @Override
     @Transactional
-    public LibraryResponseDto createBookRentDetails(RentBookDto rentBookDto) {
-        if(rentBookDto == null){
+    public BookRentDto createBookRentDetails(BookRentRequestDto bookRentRequestDto) {
+        if(bookRentRequestDto == null){
             throw new BadRequestException("Input can not be null.");
         }
-        if(rentBookDto.getQuantity() > 1){
-            throw new BadRequestException("User can only rent one copy at a time.");
+        if(bookRentRequestDto.getQuantity() > 1){
+            throw new BadRequestException("User can only rent a copy of a book at a time.");
         }
 
-        LibraryResponseDto lbu = iUserService.fetchUser(rentBookDto.getPhoneNumber());
-        LibraryResponseDto lb =
-                iBookService.fetchBook(rentBookDto.getTitle(),rentBookDto.getAuthor());
+        LibraryUser lib = libraryUserRepository.findByPhoneNumber(bookRentRequestDto.getPhoneNumber());
 
-        BookRent bookRent = rentBookRepository
-                .findByLibraryUserAndBookAndReturned(lbu.libraryUser,
-                        lb.getBook(),false);
+        validateUserNotNull(lib,bookRentRequestDto.getPhoneNumber());
+
+        Book bk = bookRepository.findByTitleAndAuthor(bookRentRequestDto.getTitle(), bookRentRequestDto.getAuthor());
+
+        validateBookNotNull(bk, bookRentRequestDto.getTitle(), bookRentRequestDto.getAuthor());
+
+        bk.setAvailable(bk.getAvailable() - bookRentRequestDto.getQuantity());
+        bk.setBorrowed(bk.getBorrowed() + bookRentRequestDto.getQuantity());
+
+
+        BookRent bookRent = bookRentRepository
+                .findByLibraryUserIdAndBookIdAndReturned(lib.getId(), bk.getId(),false);
+
         if (bookRent != null) {
             throw new BadRequestException(
-                    String.format("You have running rent on this book title: %s and author: %s",
-                            rentBookDto.getTitle(),rentBookDto.getAuthor())
+                    String.format("You a have running rent on this book title: %s and author: %s",
+                            bookRentRequestDto.getTitle(), bookRentRequestDto.getAuthor())
             );
         }
 
-        Book bk = lb.getBook();
-        bk.setBorrowed(bk.getBorrowed()+rentBookDto.getQuantity());
-        bk.setAvailable(bk.getAvailable()-rentBookDto.getQuantity());
-        BookRent rb = RentBookMapper.mapToRentBook(rentBookDto,new BookRent());
+        BookRent rb = RentBookMapper.mapToRentBook(bookRentRequestDto,new BookRent());
         rb.setAmount(bk.getPrice());
         rb.setPaid(true);
+        rb.setReturned(false);
+        rb.setAmount(bk.getPrice());
         rb.setBook(bk);
-        rb.setLibraryUser(lbu.libraryUser);
-        BookRent rt = rentBookRepository.save(rb);
-        lb.setBook(null);
-        RentBookDto rdt =RentBookMapper.mapToRentBookDto(rt,rentBookDto);
-        rdt.setUserName(lbu.libraryUser.getFirstName() + " " + lbu.libraryUser.getLastName());
-        lb.setStatus(201);
-        lb.setDescription("Created");
-        lb.setMessage("Book rent details created successfully.");
-        lb.setApiPath("uri=/api/rent");
-        lb.setRentBook(rdt);
-        return lb;
+        rb.setLibraryUser(lib);
+
+        BookRent rt = bookRentRepository.save(rb);
+
+        BookRentDto rdt = RentBookMapper.mapToRentBookDto(rt, new BookRentDto());
+        return rdt;
 
     }
 
     @Override
-    public LibraryResponseDto returnBook(UserBookDto userBookDto) {
+    public ResponseDto returnBook(UserBookDto userBookDto) {
         if(userBookDto == null){
             throw new BadRequestException("Input can not be null.");
         }
-        LibraryResponseDto lbu = iUserService.fetchUser(userBookDto.getPhoneNumber());
-        LibraryResponseDto lb =
-                iBookService.fetchBook(userBookDto.getTitle(),userBookDto.getAuthor());
+        LibraryUser lbu = libraryUserRepository.findByPhoneNumber(userBookDto.getPhoneNumber());
 
+        Book bk = bookRepository.findByTitleAndAuthor(userBookDto.getTitle(),userBookDto.getAuthor());
+         validateBookNotNull(bk,userBookDto.getTitle(),userBookDto.getAuthor());
 
-        BookRent bookRent = rentBookRepository
-                .findByLibraryUserAndBookAndReturned(lbu.libraryUser,
-                        lb.getBook(),false);
+        BookRent bookRent = bookRentRepository
+                .findByLibraryUserIdAndBookIdAndReturned(lbu.getId(),
+                        bk.getId(),false);
 
         if (bookRent == null) {
             throw new BadRequestException(
@@ -97,85 +100,88 @@ public class IRentBookImpl implements IRentBookService {
             );
         }
         bookRent.setReturned(true);
-        Book bk = lb.getBook();
         bk.setBorrowed(bk.getBorrowed()- bookRent.getQuantity());
         bk.setAvailable(bk.getAvailable()+ bookRent.getQuantity());
         bookRent.setBook(bk);
-        bookRent.setLibraryUser(lbu.libraryUser);
-        rentBookRepository.save(bookRent);
+        bookRent.setLibraryUser(lbu);
+        bookRentRepository.save(bookRent);
 
-        lb.setBook(null);
-        lb.setStatus(200);
-        lb.setDescription("Ok");
-        lb.setMessage("Book rent details updated successfully.");
-        lb.setApiPath("uri=/api/return");
-        return lb;
+        ResponseDto rsp = new ResponseDto();
+        rsp.setStatus(200);
+        rsp.setDescription("Ok");
+        rsp.setMessage("Book rent details updated successfully.");
+        rsp.setApiPath("uri=/api/return");
+        return rsp;
     }
 
     @Override
     @Transactional
-    public LibraryResponseDto deleteRentBook(UserBookDto userBookDto, String resourceName) {
+    public ResponseDto deleteRentBook(UserBookDto userBookDto, String resourceName) {
 
         if(userBookDto == null){
             throw new BadRequestException("Input can not be null.");
         }
-        LibraryResponseDto lb = iBookService.
-                fetchBook(userBookDto.getTitle(),userBookDto.getAuthor());
-        List<BookRent> bk = rentBookRepository.findByBook(lb.getBook());
-        if (bk.isEmpty()) {
+        Book bk = bookRepository.findByTitleAndAuthor(userBookDto.getTitle(),userBookDto.getAuthor());
+
+         validateBookNotNull(bk,userBookDto.getTitle(),userBookDto.getAuthor());
+
+        List<BookRent> rb = bookRentRepository.findByBookId(bk.getId());
+
+        if (rb.isEmpty()) {
             throw new ResourceNotFoundException(
-                    resourceName+" not found given input data bookId" + lb.getBook().getId());
+                    resourceName+" not found given input data bookId" + bk.getId());
         }
-        List<BookRent> runningRent = bk.stream().filter(vr->vr.isReturned()==false).toList();
+        List<BookRent> runningRent = rb.stream().filter(vr->vr.isReturned()==false).toList();
 
         if (!runningRent.isEmpty()) {
            throw  new BadRequestException (resourceName+" could not be deleted because it has running rent.");
         }
-
-        rentBookRepository.deleteByBook(lb.getBook());
-        lb.setBook(null);
-        return setResponse(lb);
+        bookRentRepository.deleteByBook((bk));
+        ResponseDto rdt = new ResponseDto();
+        rdt.setStatus(200);
+        rdt.setDescription("Ok");
+        rdt.setMessage(resourceName+ " deleted successfully.");
+        return rdt;
     }
 
 
-    @Override
-    public LibraryResponseDto deleteRentBook(String id) {
-        List<BookRent> bookRents = rentBookRepository.findAll();
-        LibraryResponseDto lb = new LibraryResponseDto();
-        if(!bookRents.isEmpty() && id == null) {
-            lb.setTimestamp(getTime());
-            lb.setStatus(200);
-            lb.setDescription("Ok");
-            lb.setRentedBooks(bookRents);
-            return setResponse(lb);
+    public List<BookRentDto> fetchRentBook(String bookId, String phoneNumber, boolean returned, String rentId) {
+
+        List<BookRentDto> bookRentDtoList = new ArrayList<>();
+
+        if(rentId != null){
+          BookRent br = bookRentRepository.findById(rentId)
+                  .orElseThrow(()->new ResourceNotFoundException("Rent not found given input data rentId: "+ rentId));
+          if(!br.isReturned()){
+              throw new BadRequestException("Rent details could not be deleted because it is running.");
+          }
+          bookRentRepository.delete(br);
         }
 
-        if(!bookRents.isEmpty() && id != null ) {
-            rentBookRepository.deleteById(id);
-            lb.setTimestamp(getTime());
-            lb.setStatus(200);
-            lb.setDescription("Ok");
-            lb.setRentedBooks(rentBookRepository.findAll());
-            return setResponse(lb);
-        }
 
-        throw  new  ResourceNotFoundException("There is no book rent details available.");
+        List<BookRent> rents = bookRentRepository.findAll();
 
-    }
-
-    public LibraryResponseDto fetchRentBook(String bookId,String phoneNumber, boolean returned) {
-
-        LibraryResponseDto lb = new LibraryResponseDto();
-        List<BookRent> rents = rentBookRepository.findAll();
         if (rents.isEmpty()) {
             throw new ResourceNotFoundException("There is no book rent details available.");
+        }
+
+        if(bookId==null && bookId==null  && returned) {
+            List<BookRent> rt = rents.stream().filter(vr-> vr.isReturned()).toList();
+            if (rt.isEmpty()) {
+                throw new BadRequestException("There is no book rent details available.");
+            }
+            rt.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
+            return bookRentDtoList;
         }
 
         if(bookId!=null && returned) {
           List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
                   .equals(bookId) && vr.isReturned()).toList();
-          lb.setRentedBooks(rt);
-          return getResponse(lb);
+            if (rt.isEmpty()) {
+                throw new BadRequestException("There is no book rent details available.");
+            }
+            rt.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
+            return bookRentDtoList;
         }
 
         if(phoneNumber!=null && returned) {
@@ -183,42 +189,58 @@ public class IRentBookImpl implements IRentBookService {
                     .filter(vr-> vr.getLibraryUser()
                             .getPhoneNumber().equals(phoneNumber)&&
                             vr.isReturned()).toList();
-            lb.setRentedBooks(rt);
-            return getResponse(lb);
+            if (rt.isEmpty()) {
+                throw new BadRequestException("There is no book rent details available.");
+            }
+            rt.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
+            return bookRentDtoList;
         }
 
         if(bookId!=null && !returned) {
             List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
                     .equals(bookId) && !vr.isReturned()).toList();
-            lb.setRentedBooks(rt);
-            return getResponse(lb);
+            if (rt.isEmpty()) {
+                throw new BadRequestException("There is no book rent details available.");
+            }
+            rt.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
+            return bookRentDtoList;
         }
 
         if(phoneNumber != null && !returned) {
             List<BookRent> rt = rents.stream()
                     .filter(vr-> vr.getLibraryUser()
                             .getPhoneNumber().equals(phoneNumber)&& !vr.isReturned()).toList();
-            lb.setRentedBooks(rt);
-            return getResponse(lb);
+            if (rt.isEmpty()) {
+                throw new BadRequestException("There is no book rent details available.");
+            }
+            rt.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
+            return bookRentDtoList;
         }
 
         if(bookId!=null && phoneNumber != null) {
             List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
                     .equals(bookId) && vr.getLibraryUser().getPhoneNumber().equals(phoneNumber)).toList();
-            lb.setRentedBooks(rt);
-            return getResponse(lb);
+            if (rt.isEmpty()) {
+                throw new BadRequestException("There is no book rent details available.");
+            }
+            rt.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
+            return bookRentDtoList;
         }
 
         if(bookId!=null && phoneNumber != null && returned) {
             List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
                     .equals(bookId) && vr.getLibraryUser()
                     .getPhoneNumber().equals(phoneNumber) && vr.isReturned()).toList();
-            lb.setRentedBooks(rt);
-            return getResponse(lb);
+            if (rt.isEmpty()) {
+                throw new BadRequestException("There is no book rent details available.");
+            }
+            rt.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
+            return bookRentDtoList;
         }
 
-        lb.setRentedBooks(rents);
-        return getResponse(lb);
+
+        rents.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
+        return bookRentDtoList;
     }
 
 
@@ -226,6 +248,9 @@ public class IRentBookImpl implements IRentBookService {
         lb.setTimestamp(getTime());
         lb.setStatus(200);
         lb.setDescription("Ok");
+        if(lb.getRentedBooks().isEmpty()){
+            lb.setMessage("There is no rent books details available.");
+        }
         return lb;
     }
 

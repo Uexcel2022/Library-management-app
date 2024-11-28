@@ -3,7 +3,10 @@ package com.uexcel.library.service.impl;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.Entity.Genre;
 import com.uexcel.library.dto.BookDto;
+import com.uexcel.library.dto.BookRequestDto;
 import com.uexcel.library.dto.LibraryResponseDto;
+import com.uexcel.library.dto.ResponseDto;
+import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.repositoty.BookRepository;
 import com.uexcel.library.service.IGenreService;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +31,7 @@ class IBookServiceImplTest {
 
     Book book;
     Genre genre;
-    BookDto bookDto;
+    BookRequestDto bookRequestDto;
     LibraryResponseDto lb;
 
     @BeforeEach
@@ -36,23 +39,21 @@ class IBookServiceImplTest {
         MockitoAnnotations.openMocks(this);
         book = new Book();
         genre = new Genre();
-        bookDto = new BookDto();
+        bookRequestDto = new BookRequestDto();
         lb = new LibraryResponseDto();
     }
 
     @Test
     public void createBookTest(){
-        bookDto.setAuthor("Ai");
-        bookDto.setGenre("thriller");
-        bookDto.setIsbn("123456789");
-        bookDto.setTitle("Java");
-        bookDto.setIsbn("2021-01-4");
-        bookDto.setGenre("thriller");
-        bookDto.setEdition("13th edition");
-        bookDto.setPrice(30.95);
-        bookDto.setQuantity(100);
-        bookDto.setBorrowed(10);
-        bookDto.setAvailable(90);
+        bookRequestDto.setAuthor("Ai");
+        bookRequestDto.setGenre("thriller");
+        bookRequestDto.setIsbn("123456789");
+        bookRequestDto.setTitle("Java");
+        bookRequestDto.setIsbn("2021-01-4");
+        bookRequestDto.setGenre("thriller");
+        bookRequestDto.setEdition("13th edition");
+        bookRequestDto.setPrice(30.95);
+        bookRequestDto.setQuantity(100);
 
         genre.setGenreName("thriller");
         genre.setId(UUID.randomUUID().toString());
@@ -61,68 +62,57 @@ class IBookServiceImplTest {
         lb.setDescription("Ok");
         lb.setGenre(genre);
 
-        book.setTitle(bookDto.getTitle());
-        book.setAuthor(bookDto.getAuthor());
-        book.setLanguage(bookDto.getLanguage());
-        book.setIsbn(bookDto.getIsbn());
-        book.setPublishedDate(bookDto.getPublishedDate());
-        book.setEdition(bookDto.getEdition());
-        book.setPrice(bookDto.getPrice());
-        book.setQuantity(bookDto.getQuantity());
-        book.setBorrowed(bookDto.getBorrowed());
+        book.setTitle(bookRequestDto.getTitle());
+        book.setAuthor(bookRequestDto.getAuthor());
+        book.setLanguage(bookRequestDto.getLanguage());
+        book.setIsbn(bookRequestDto.getIsbn());
+        book.setPublishedDate(bookRequestDto.getPublishedDate());
+        book.setEdition(bookRequestDto.getEdition());
+        book.setPrice(bookRequestDto.getPrice());
+        book.setQuantity(bookRequestDto.getQuantity());
         book.setGenre(lb.getGenre());
 
         when(iGenreService.fetchGenreByName(genre.getGenreName())).thenReturn(lb);
         bookRepository.save(book);
 
-        LibraryResponseDto bk = bookServiceImpl.createBook(bookDto);
+        ResponseDto rs = bookServiceImpl.createBook(bookRequestDto);
 
-        assertEquals(201, bk.getStatus());
-        assertEquals("Created", bk.getDescription());
-        assertEquals("Book created successfully.", bk.getMessage());
+        assertEquals(201, rs.getStatus());
+        assertEquals("Created", rs.getDescription());
+        assertEquals("Book created successfully.", rs.getMessage());
         verify(bookRepository,times(1)).save(book);
-        verify(iGenreService,times(1)).fetchGenreByName(bookDto.getGenre());
+        verify(iGenreService,times(1)).fetchGenreByName(bookRequestDto.getGenre());
 
     }
 
     @Test
     public void createBookAndBookExistTest(){
-        bookDto.setAuthor("Ai");
-        bookDto.setGenre("thriller");
-        bookDto.setIsbn("123456789");
-        bookDto.setTitle("Java");
-        bookDto.setIsbn("2021-01-4");
-        bookDto.setGenre("thriller");
-        bookDto.setEdition("13th edition");
-        bookDto.setPrice(30.95);
-        bookDto.setQuantity(100);
-        bookDto.setBorrowed(10);
-        bookDto.setAvailable(90);
+        bookRequestDto.setAuthor("Ai");
+        bookRequestDto.setGenre("thriller");
+        bookRequestDto.setIsbn("123456789");
+        bookRequestDto.setTitle("Java");
+        bookRequestDto.setIsbn("2021-01-4");
+        bookRequestDto.setGenre("thriller");
+        bookRequestDto.setEdition("13th edition");
+        bookRequestDto.setPrice(30.95);
+        bookRequestDto.setQuantity(100);
 
         genre.setGenreName("thriller");
         genre.setId(UUID.randomUUID().toString());
         book.setGenre(genre);
 
-        book.setTitle(bookDto.getTitle());
-        book.setAuthor(bookDto.getAuthor());
-        book.setLanguage(bookDto.getLanguage());
-        book.setIsbn(bookDto.getIsbn());
-        book.setPublishedDate(bookDto.getPublishedDate());
-        book.setEdition(bookDto.getEdition());
-        book.setQuantity(bookDto.getQuantity());
-        book.setBorrowed(bookDto.getBorrowed());
-        book.setAvailable(bookDto.getAvailable());
+        book.setTitle(bookRequestDto.getTitle());
+        book.setAuthor(bookRequestDto.getAuthor());
+        book.setLanguage(bookRequestDto.getLanguage());
+        book.setIsbn(bookRequestDto.getIsbn());
+        book.setPublishedDate(bookRequestDto.getPublishedDate());
+        book.setEdition(bookRequestDto.getEdition());
+        book.setQuantity(bookRequestDto.getQuantity());
 
-        when(bookRepository.findByTitleAndAuthor(bookDto.getTitle(), bookDto.getAuthor())).thenReturn(book);
+        when(bookRepository.findByTitleAndAuthor(bookRequestDto.getTitle(), bookRequestDto.getAuthor())).thenReturn(book);
 
-        LibraryResponseDto bk = bookServiceImpl.createBook(bookDto);
-        assertNotNull(bk.getTimestamp());
-        assertEquals(genre, bk.getBook().getGenre());
-        assertEquals(book, bk.getBook());
-        assertEquals(302, bk.getStatus());
-        assertEquals("Found", bk.getDescription());
-        assertEquals("There is book with the title: " + bookDto.getTitle(), bk.getMessage());
-        verify(iGenreService,times(0)).fetchGenreByName(bookDto.getGenre());
+        assertThrows(BadRequestException.class, () -> bookServiceImpl.createBook(bookRequestDto));
+
 
     }
 }

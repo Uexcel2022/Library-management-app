@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter @Setter
 
-public class LibraryResponseDto extends ErrorResponseDto {
+public class LibraryResponseDto extends ResponseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Book book;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,9 +26,9 @@ public class LibraryResponseDto extends ErrorResponseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<LibraryUser> libraryUsers;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public RentBookDto rentBook;
+    public BookRent rentBook;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<RentBookDto> rentBooks;
+    private List<BookRent> rentBooks;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<BookRent> rentedBooks;
 }

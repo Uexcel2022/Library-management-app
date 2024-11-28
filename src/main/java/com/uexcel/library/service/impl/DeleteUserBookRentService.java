@@ -8,8 +8,8 @@ import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.repositoty.BookRepository;
-import com.uexcel.library.repositoty.RentBookRepository;
-import com.uexcel.library.repositoty.UserRepository;
+import com.uexcel.library.repositoty.BookRentRepository;
+import com.uexcel.library.repositoty.LibraryUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -24,8 +24,8 @@ import static com.uexcel.library.service.IBookService.getTime;
 @AllArgsConstructor
 public class DeleteUserBookRentService {
     private final BookRepository bookRepository;
-    private final RentBookRepository rentBookRepository;
-    private final UserRepository userRepository;
+    private final BookRentRepository bookRentRepository;
+    private final LibraryUserRepository libraryUserRepository;
 
     private final Logger logger = LoggerFactory.getLogger(DeleteUserBookRentService.class);
 
@@ -45,32 +45,32 @@ public class DeleteUserBookRentService {
                         userBookDto.getTitle(), userBookDto.getAuthor()));
             }
 
-           rb = rentBookRepository.findByBook(bk);
+           rb = bookRentRepository.findByBook(bk);
 
             if (rb.isEmpty()) {
                 bookRepository.delete(bk);
                 return getResponse(apiPath);
             }
             checkForRunningRent(rb,resourceName);
-            rentBookRepository.deleteByBook(bk);
+            bookRentRepository.deleteByBook(bk);
             bookRepository.delete(bk);
             return getResponse(apiPath);
         }
 
         if("User".equals(resourceName)) {
-            LibraryUser user = userRepository.findByPhoneNumber(userBookDto.getPhoneNumber());
+            LibraryUser user = libraryUserRepository.findByPhoneNumber(userBookDto.getPhoneNumber());
             if (user == null) {
                 throw new ResourceNotFoundException(String.format("User with phone number: %s not found."
                         , userBookDto.getPhoneNumber()));
             }
-            rb = rentBookRepository.findByLibraryUser(user);
+            rb = bookRentRepository.findByLibraryUser(user);
             if (rb.isEmpty()) {
-                userRepository.delete(user);
+                libraryUserRepository.delete(user);
                 return getResponse(apiPath);
             }
             checkForRunningRent(rb,resourceName);
-            rentBookRepository.deleteByLibraryUser(user);
-            userRepository.delete(user);
+            bookRentRepository.deleteByLibraryUser(user);
+            libraryUserRepository.delete(user);
             return getResponse(apiPath);
         }
 

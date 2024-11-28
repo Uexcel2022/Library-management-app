@@ -12,8 +12,11 @@ import java.util.List;
 
 
 @Repository
-public interface RentBookRepository extends JpaRepository<BookRent,String> {
+public interface BookRentRepository extends JpaRepository<BookRent,String> {
     BookRent findByLibraryUserAndBookAndReturned(LibraryUser user, Book book, boolean returned);
+
+    BookRent findByLibraryUserIdAndBookIdAndReturned(String userId, String bookId, boolean returned);
+
     @Modifying
     @Transactional
     void deleteByBook(Book bk);
@@ -24,4 +27,6 @@ public interface RentBookRepository extends JpaRepository<BookRent,String> {
      @Modifying
      @Transactional
     void deleteByLibraryUser(LibraryUser user);
+
+    List<BookRent> findByBookId(String id);
 }

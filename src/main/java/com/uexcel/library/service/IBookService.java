@@ -1,34 +1,44 @@
 package com.uexcel.library.service;
 
-import com.uexcel.library.dto.BookDto;
-import com.uexcel.library.dto.UserBookDto;
-import com.uexcel.library.dto.LibraryResponseDto;
+import com.uexcel.library.Entity.Book;
+import com.uexcel.library.dto.*;
+import com.uexcel.library.exception.BadRequestException;
+import com.uexcel.library.exception.ResourceNotFoundException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public interface IBookService {
     /**
-     * @param bookDto - will hold book properties
+     * @param bookRequestDto - will hold book properties
      * @return - will hold response information
      */
- LibraryResponseDto createBook(BookDto bookDto);
+    ResponseDto createBook(BookRequestDto bookRequestDto);
 
     /**
-     * @param bookTitle  - book tile
-     * @param author - book author
+     * @param bookTitle - book tile
+     * @param author    - book author
      * @return will hold response information
      */
- LibraryResponseDto fetchBook(String bookTitle, String author);
+    BookDto fetchBook(String bookTitle, String author);
 
- LibraryResponseDto updateBook(BookDto bookDto);
+    ResponseDto updateBook(BookRequestDto bookRequestDto);
 
-LibraryResponseDto fetchAllBooks(String author, String genre);
+    List<BookDto> fetchAllBooks(String author, String genre);
 
- LibraryResponseDto deleteBook(UserBookDto userBookDto);
+    LibraryResponseDto deleteBook(String title, String author);
 
     static String getTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date());
+    }
+
+    static void validateBookNotNull(Book book, String title, String author){
+        if(book == null) {
+            throw new ResourceNotFoundException(
+                    String.format("Book with title: %s and author: %s not found.", title,author));
+        }
+
     }
 }
