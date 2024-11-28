@@ -26,12 +26,9 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
      */
     @Override
     public ResponseDto createUser(LibraryUserDto lud) {
-//        LibraryUser inDBUser = libraryUserRepository.
-//                findByPhoneNumberOrEmail(lud.getPhoneNumber(), lud.getEmail());
+
+        checkForExistUser(lud);
         ResponseDto rsp = new ResponseDto();
-//        if(inDBUser != null){
-//            throw new BadRequestException("There is already a user registered with the phone number or email");
-//        }
         libraryUserRepository.save(UserMapper.mapToUser(lud,new LibraryUser()));
 
         rsp.setStatus(201);
@@ -90,8 +87,8 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
         libraryUserRepository.save(UserMapper.mapToUser(libraryUserDto,lUser));
 
         ResponseDto rsp = new ResponseDto();
-        rsp.setStatus(202);
-        rsp.setDescription("Accepted");
+        rsp.setStatus(200);
+        rsp.setDescription("Ok");
         rsp.setMessage("User updated successfully.");
         return rsp;
     }

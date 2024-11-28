@@ -69,8 +69,10 @@ public class BookRentController {
             }
     )
     @PutMapping("/return")
-    public ResponseEntity<ResponseDto> returnBook(@Valid @RequestBody  UserBookDto userBookDto) {
-        ResponseDto rsp = rentBookService.returnBook(userBookDto);
+    public ResponseEntity<ResponseDto> returnBook(
+            @Valid @RequestBody(required = false) UserBookDto userBookDto,
+            @RequestParam(required = false) String rentId) {
+        ResponseDto rsp = rentBookService.returnBook(userBookDto,rentId);
         return ResponseEntity.status(rsp.getStatus()).body(rsp);
     }
 

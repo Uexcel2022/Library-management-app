@@ -79,10 +79,18 @@ public class IRentBookImpl implements IRentBookService {
     }
 
     @Override
-    public ResponseDto returnBook(UserBookDto userBookDto) {
-        if(userBookDto == null){
+    public ResponseDto returnBook(UserBookDto userBookDto, String rentId) {
+        if(rentId != null && !rentId.isEmpty()){
+            BookRent br = bookRentRepository.findById(rentId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Book rent details not found with id: " + rentId));
+            return  getResponse(br);
+        }
+
+        if(userBookDto == null ){
             throw new BadRequestException("Input can not be null.");
         }
+
         LibraryUser lbu = libraryUserRepository.findByPhoneNumber(userBookDto.getPhoneNumber());
 
         Book bk = bookRepository.findByTitleAndAuthor(userBookDto.getTitle(),userBookDto.getAuthor());
@@ -98,19 +106,8 @@ public class IRentBookImpl implements IRentBookService {
                             userBookDto.getTitle(),userBookDto.getAuthor())
             );
         }
-        bookRent.setReturned(true);
-        bk.setBorrowed(bk.getBorrowed()- bookRent.getQuantity());
-        bk.setAvailable(bk.getAvailable()+ bookRent.getQuantity());
-        bookRent.setBook(bk);
-        bookRent.setLibraryUser(lbu);
-        bookRentRepository.save(bookRent);
 
-        ResponseDto rsp = new ResponseDto();
-        rsp.setStatus(200);
-        rsp.setDescription("Ok");
-        rsp.setMessage("Book rent details updated successfully.");
-        rsp.setApiPath("uri=/api/return");
-        return rsp;
+        return getResponse(bookRent);
     }
 
     @Override
@@ -240,6 +237,19 @@ public class IRentBookImpl implements IRentBookService {
 
         rents.forEach(vr->bookRentDtoList.add(RentBookMapper.mapToRentBookDto(vr,new BookRentDto())));
         return bookRentDtoList;
+    }
+
+    private ResponseDto getResponse(BookRent bookRent){
+        bookRent.setReturned(true);
+        bookRent.getBook().setBorrowed(bookRent.getBook().getBorrowed()- bookRent.getQuantity());
+        bookRent.getBook().setAvailable(bookRent.getBook().getAvailable()+ bookRent.getQuantity());
+        bookRentRepository.save(bookRent);
+        ResponseDto rsp = new ResponseDto();
+        rsp.setStatus(200);
+        rsp.setDescription("Ok");
+        rsp.setMessage("Book rent details updated successfully.");
+        rsp.setApiPath("uri=/api/return");
+        return rsp;
     }
 
 

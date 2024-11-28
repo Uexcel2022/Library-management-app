@@ -12,4 +12,12 @@ spring:
 logging:
   level:
     com.uexcel: DEBUG
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+springdoc:
+  api-docs:
+    enabled: true
+  show-actuator: true

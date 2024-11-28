@@ -26,7 +26,8 @@ import static com.uexcel.library.service.IBookService.getTime;
 public class GlobalException extends ResponseEntityExceptionHandler {
 private final Logger logger = LoggerFactory.getLogger(GlobalException.class);
     @Nullable
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders
+            headers, HttpStatusCode status, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
 
         List<FieldError> errors = ex.getBindingResult().getFieldErrors();
@@ -40,7 +41,6 @@ private final Logger logger = LoggerFactory.getLogger(GlobalException.class);
 
 
     }
-
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -62,7 +62,7 @@ private final Logger logger = LoggerFactory.getLogger(GlobalException.class);
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDto>
     handleExceptions(Exception e, WebRequest webRequest) {
-        logger.debug(e.getMessage());
+        logger.debug(e.getMessage(),e);
         return   ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ResponseDto(getTime(),500,"Internal Server Error",
                         "We encountered an error. Please try again or contact support for more information.",

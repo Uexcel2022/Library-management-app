@@ -1,10 +1,12 @@
 package com.uexcel.library.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Schema(name = "Responses",description = "This schema will hold response status and message")
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 public class ResponseDto {

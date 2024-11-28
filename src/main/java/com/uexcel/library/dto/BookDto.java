@@ -2,6 +2,7 @@ package com.uexcel.library.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.uexcel.library.Entity.Genre;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -12,7 +13,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-
+@Schema(name = "Book",description = "This schema will hold book details.")
 @Getter @Setter @ToString
 public class BookDto{
     @JsonInclude(JsonInclude.Include.NON_NULL)

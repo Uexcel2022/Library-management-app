@@ -1,10 +1,11 @@
 package com.uexcel.library.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
-
+@Schema(name = "BookRentRequest",description = "This schema will hold information to rent a book.")
 @Getter @Setter
 public class BookRentRequestDto {
     @Pattern(regexp = "[A-Za-z0-9 ]+",message = "Title is a required field.")

@@ -1,5 +1,6 @@
 package com.uexcel.library.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@Schema(name = "LibraryUser",description = "This schema will hold information about the user.")
 @Getter @Setter @ToString
 public class LibraryUserDto {
     private String id;

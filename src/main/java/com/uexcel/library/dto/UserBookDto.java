@@ -1,9 +1,11 @@
 package com.uexcel.library.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-
+@Schema(name = "UserBook",description = "This schema will hold information about user and " +
+        "book in relation to book renting management.")
 @Getter @Setter
 public class UserBookDto {
     @Pattern(regexp = "0[7-9][01][0-9]{8}",message = "Invalid mobile number.")
