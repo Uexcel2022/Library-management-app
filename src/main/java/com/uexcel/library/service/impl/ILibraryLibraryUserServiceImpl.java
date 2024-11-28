@@ -77,7 +77,7 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
 
         LibraryUser lUser = libraryUserRepository.findById(libraryUserDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("User not found given input data userId", libraryUserDto.getId()))
+                        String.format("User not found given input data userId: %s", libraryUserDto.getId()))
                 );
 
         if(!lUser.getPhoneNumber().equals(libraryUserDto.getPhoneNumber()) ||

@@ -74,8 +74,7 @@ public class IRentBookImpl implements IRentBookService {
 
         BookRent rt = bookRentRepository.save(rb);
 
-        BookRentDto rdt = RentBookMapper.mapToRentBookDto(rt, new BookRentDto());
-        return rdt;
+        return RentBookMapper.mapToRentBookDto(rt, new BookRentDto());
 
     }
 
@@ -131,7 +130,7 @@ public class IRentBookImpl implements IRentBookService {
             throw new ResourceNotFoundException(
                     resourceName+" not found given input data bookId" + bk.getId());
         }
-        List<BookRent> runningRent = rb.stream().filter(vr->vr.isReturned()==false).toList();
+        List<BookRent> runningRent = rb.stream().filter(vr->!vr.isReturned()).toList();
 
         if (!runningRent.isEmpty()) {
            throw  new BadRequestException (resourceName+" could not be deleted because it has running rent.");
@@ -165,7 +164,7 @@ public class IRentBookImpl implements IRentBookService {
             throw new ResourceNotFoundException("There is no book rent details available.");
         }
 
-        if(bookId==null && bookId==null  && returned) {
+        if(bookId==null && phoneNumber==null  && returned) {
             List<BookRent> rt = rents.stream().filter(vr-> vr.isReturned()).toList();
             if (rt.isEmpty()) {
                 throw new BadRequestException("There is no book rent details available.");
@@ -243,27 +242,5 @@ public class IRentBookImpl implements IRentBookService {
         return bookRentDtoList;
     }
 
-
-    private  LibraryResponseDto getResponse (LibraryResponseDto lb){
-        lb.setTimestamp(getTime());
-        lb.setStatus(200);
-        lb.setDescription("Ok");
-        if(lb.getRentedBooks().isEmpty()){
-            lb.setMessage("There is no rent books details available.");
-        }
-        return lb;
-    }
-
-
-    private LibraryResponseDto setResponse(LibraryResponseDto lb) {
-        lb.setBook(null);
-        lb.setTimestamp(getTime());
-        lb.setStatus(200);
-        lb.setDescription("Ok");
-        lb.setMessage("Book rent details deleted successfully.");
-        lb.setApiPath("uri=/api/delete-rent");
-        return lb;
-
-    }
 
 }

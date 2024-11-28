@@ -13,7 +13,6 @@ import java.util.List;
 
 @Repository
 public interface BookRentRepository extends JpaRepository<BookRent,String> {
-    BookRent findByLibraryUserAndBookAndReturned(LibraryUser user, Book book, boolean returned);
 
     BookRent findByLibraryUserIdAndBookIdAndReturned(String userId, String bookId, boolean returned);
 

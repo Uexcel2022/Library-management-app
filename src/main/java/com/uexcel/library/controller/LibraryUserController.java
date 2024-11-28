@@ -1,6 +1,5 @@
 package com.uexcel.library.controller;
 
-import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.LibraryUserDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.service.ILibraryUserService;
