@@ -21,3 +21,11 @@ springdoc:
   api-docs:
     enabled: true
   show-actuator: true
+
+employee:
+  firstName: "Steven"
+  lastName: "Jokin"
+  phoneNumber : "09088108115"
+  email: "steven@yahoo.com"
+  password: "steven"
+  role: "ADMIN"

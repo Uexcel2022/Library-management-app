@@ -2,6 +2,7 @@ package com.uexcel.library.authentication;
 
 import com.uexcel.library.Entity.Employee;
 import com.uexcel.library.repositoty.EmployeeRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,16 +17,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 
     private final PasswordEncoder passwordEncoder;
     private final EmployeeRepository employeeRepository;
-
-    @Autowired
-    public UsernamePasswordAuthenticationProvider(PasswordEncoder passwordEncoder, EmployeeRepository employeeRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.employeeRepository = employeeRepository;
-    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

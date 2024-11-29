@@ -1,6 +1,7 @@
 package com.uexcel.library.mapper;
 
 import com.uexcel.library.Entity.Employee;
+import com.uexcel.library.admin.LibraryAdmin;
 import com.uexcel.library.dto.EmployeeDto;
 
 public class EmployeeMapper {
@@ -22,5 +23,15 @@ public class EmployeeMapper {
         employeeDto.setEmail(employee.getEmail());
         employeeDto.setPassword(employee.getPassword());
         return employeeDto;
+    }
+
+    public static Employee mapToEmp(LibraryAdmin lAdmin, Employee emp) {
+        emp.setLastName(lAdmin.getLastName());
+        emp.setFirstName(lAdmin.getFirstName());
+        emp.setPhoneNumber(lAdmin.getPhoneNumber());
+        emp.setEmail(lAdmin.getEmail());
+        emp.setPassword(lAdmin.getPassword());
+        emp.setRole(lAdmin.getRole());
+        return emp;
     }
 }
