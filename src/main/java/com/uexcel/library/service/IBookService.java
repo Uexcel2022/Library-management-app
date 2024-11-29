@@ -22,11 +22,11 @@ public interface IBookService {
      */
     BookDto fetchBook(String bookTitle, String author);
 
-    ResponseDto updateBook(BookRequestDto bookRequestDto);
+    ResponseDto updateBook(BookDto bookDto);
 
     List<BookDto> fetchAllBooks(String author, String genre);
 
-    LibraryResponseDto deleteBook(String title, String author);
+    ResponseDto deleteBook(String title, String author,String bookId);
 
     static String getTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

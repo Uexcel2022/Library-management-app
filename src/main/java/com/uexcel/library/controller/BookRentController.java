@@ -52,7 +52,8 @@ public class BookRentController {
     }
     @Operation(
             summary = "REST API To Update Returned Book Rent Details",
-            description = "REST API to update only the returned book status in Wisdom Spring Library",
+            description = "REST API to update only the returned book status using [ title, author and phoneNumber ]" +
+                    " or the rentId in Wisdom Spring Library",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Ok",

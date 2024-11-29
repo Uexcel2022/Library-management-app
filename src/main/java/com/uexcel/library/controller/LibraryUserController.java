@@ -113,7 +113,7 @@ public class LibraryUserController {
             description = "REST API to update user details in Wisdom Spring Library",
             responses = {
                     @ApiResponse(
-                            responseCode = "202", description = "Accepted",
+                            responseCode = "200", description = "Ok",
                             content = @Content(schema = @Schema(implementation = ResponseDto.class))
                     ),
                     @ApiResponse(
@@ -127,7 +127,7 @@ public class LibraryUserController {
             }
     )
 
-    @PostMapping("/update-user")
+    @PutMapping("/update-user")
     public ResponseEntity<ResponseDto> updateUser(@Valid @RequestBody LibraryUserDto libraryUserDto){
         ResponseDto rsp = userService.updateUser(libraryUserDto);
         return ResponseEntity.status(rsp.getStatus()).body(rsp);

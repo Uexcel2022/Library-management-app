@@ -56,10 +56,11 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
         if(!phoneNumber.matches("0[0-9][01][0-9]{8}")){
             throw new  BadRequestException(String.format("The phone number %s is invalid", phoneNumber));
         }
-        UserBookDto ubd = new UserBookDto();
-        ubd.setPhoneNumber(phoneNumber);
+        LibraryUser lUser = libraryUserRepository.findByPhoneNumber(phoneNumber);
+        ILibraryUserService.validateUserNotNull(lUser,phoneNumber);
+
         return deleteUserBookRentService
-                .deleteRentBook(ubd,"User","uri=/api/delete-user");
+                .deleteRentBook(lUser.getId(),"User","uri=/api/delete-user");
     }
 
     @Override

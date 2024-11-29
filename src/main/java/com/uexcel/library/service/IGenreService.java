@@ -1,16 +1,9 @@
 package com.uexcel.library.service;
 
-import com.uexcel.library.dto.LibraryResponseDto;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.uexcel.library.Entity.Genre;
 
 public interface IGenreService {
 
-    LibraryResponseDto fetchGenreByName(String genreName);
+    Genre fetchGenreByName(String genreName);
 
-    default String getTime(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(new Date());
-    }
 }

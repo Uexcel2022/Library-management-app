@@ -20,7 +20,6 @@ public class BookRequestDto {
     private String isbn;
     @Pattern(regexp = "[A-Za-z]+",message = "Language is a required field.")
     private String language;
-    @Pattern(regexp = "[1-9]+[a-z ]+edition",message = "Language is a required field.")
     private String edition;
     @Past(message = "Publish date should be less than today.")
     private LocalDate publishedDate;

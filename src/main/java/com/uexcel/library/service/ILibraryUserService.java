@@ -21,15 +21,14 @@ public interface ILibraryUserService {
      */
     ResponseDto deleteUser(String phoneNumber);
 
-
     ResponseDto updateUser(LibraryUserDto libraryUserDto);
-
-
 
     static void validateUserNotNull(LibraryUser user,String phoneNumber) {
         if(user == null) {
             throw new ResourceNotFoundException(
-                    String.format("User with the phone number: %s not found.", phoneNumber)
+                    String.format(
+                            "User not found for the given input data phoneNumber: %s", phoneNumber
+                    )
             );
         }
     }

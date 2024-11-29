@@ -30,9 +30,10 @@ public class BookMapper{
         book.setLanguage(bookDto.getLanguage());
         book.setPrice(bookDto.getPrice());
         book.setQuantity(book.getQuantity()+bookDto.getQuantity());
-        book.setAvailable(book.getQuantity()+bookDto.getQuantity());
+        book.setAvailable(book.getAvailable()+bookDto.getQuantity());
         book.setBorrowed(book.getBorrowed()+bookDto.getBorrowed());
-        book.setGenre(bookDto.getGenre());
+        book.getGenre().setGenreName(bookDto.getGenre().getGenreName());
+        book.getGenre().setId(bookDto.getGenre().getId());
         return book;
     }
 

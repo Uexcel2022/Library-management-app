@@ -2,7 +2,6 @@ package com.uexcel.library.controller;
 
 import com.uexcel.library.dto.BookDto;
 import com.uexcel.library.dto.BookRequestDto;
-import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.service.IBookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,14 +76,15 @@ public class BookController {
     )
 
     @PutMapping("/update-book")
-    public ResponseEntity<LibraryResponseDto> fetchBook(@Valid@ RequestBody BookRequestDto bookRequestDto) {
-        LibraryResponseDto lb = new LibraryResponseDto();
-        return ResponseEntity.status(lb.getStatus()).body(lb);
+    public ResponseEntity<ResponseDto> updateBook(@Valid@ RequestBody BookDto bookDto) {
+        ResponseDto resp = bookService.updateBook(bookDto);
+        return ResponseEntity.status(resp.getStatus()).body(resp);
     }
 
     @Operation(
             summary = "REST API To Delete Book Details",
-            description = "REST API to delete book details in Wisdom Spring Library",
+            description = "REST API to delete book details using the [ title and author ] or the bookId in " +
+                    "Wisdom Spring Library",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Ok",
@@ -106,9 +106,10 @@ public class BookController {
     )
 
     @DeleteMapping("/delete-book")
-    public ResponseEntity<LibraryResponseDto> deleteBook(@RequestParam String title,
-                                                         @RequestParam String author) {
-        LibraryResponseDto lb = bookService.deleteBook(title, author);
+    public ResponseEntity<ResponseDto> deleteBook(@RequestParam(required = false) String title,
+                                                  @RequestParam(required = false) String author,
+                                                  @RequestParam(required = false) String bookId) {
+        ResponseDto lb = bookService.deleteBook(title, author,bookId);
         return ResponseEntity.status(lb.getStatus()).body(lb);
     }
 

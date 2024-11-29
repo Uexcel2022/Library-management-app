@@ -19,7 +19,6 @@ public class LibraryUserDto {
     private String lastName;
     @Pattern(regexp = "0[7-9][01][0-9]{8}",message = "Please enter a valid Nigeria phone number.")
     private String phoneNumber;
-
     @Email(message = "Please enter a valid email address.")
     @NotEmpty(message = "Email address is required.")
     @NotNull(message = "Email address is required.")

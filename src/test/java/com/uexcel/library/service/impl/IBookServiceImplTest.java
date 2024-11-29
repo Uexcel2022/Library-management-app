@@ -3,7 +3,6 @@ package com.uexcel.library.service.impl;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.Entity.Genre;
 import com.uexcel.library.dto.BookRequestDto;
-import com.uexcel.library.dto.LibraryResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.repositoty.BookRepository;
@@ -31,7 +30,6 @@ class IBookServiceImplTest {
     Book book;
     Genre genre;
     BookRequestDto bookRequestDto;
-    LibraryResponseDto lb;
 
     @BeforeEach
     void setUp() {
@@ -39,7 +37,7 @@ class IBookServiceImplTest {
         book = new Book();
         genre = new Genre();
         bookRequestDto = new BookRequestDto();
-        lb = new LibraryResponseDto();
+
     }
 
     @Test
@@ -57,10 +55,6 @@ class IBookServiceImplTest {
         genre.setGenreName("thriller");
         genre.setId(UUID.randomUUID().toString());
 
-        lb.setStatus(200);
-        lb.setDescription("Ok");
-        lb.setGenre(genre);
-
         book.setTitle(bookRequestDto.getTitle());
         book.setAuthor(bookRequestDto.getAuthor());
         book.setLanguage(bookRequestDto.getLanguage());
@@ -69,9 +63,8 @@ class IBookServiceImplTest {
         book.setEdition(bookRequestDto.getEdition());
         book.setPrice(bookRequestDto.getPrice());
         book.setQuantity(bookRequestDto.getQuantity());
-        book.setGenre(lb.getGenre());
 
-        when(iGenreService.fetchGenreByName(genre.getGenreName())).thenReturn(lb);
+        when(iGenreService.fetchGenreByName(genre.getGenreName())).thenReturn(genre);
         bookRepository.save(book);
 
         ResponseDto rs = bookServiceImpl.createBook(bookRequestDto);

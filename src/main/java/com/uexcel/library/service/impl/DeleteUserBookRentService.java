@@ -3,8 +3,7 @@ package com.uexcel.library.service.impl;
 import com.uexcel.library.Entity.Book;
 import com.uexcel.library.Entity.LibraryUser;
 import com.uexcel.library.Entity.BookRent;
-import com.uexcel.library.dto.UserBookDto;
-import com.uexcel.library.dto.LibraryResponseDto;
+import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.repositoty.BookRepository;
@@ -30,20 +29,16 @@ public class DeleteUserBookRentService {
     private final Logger logger = LoggerFactory.getLogger(DeleteUserBookRentService.class);
 
     @Transactional
-    public LibraryResponseDto deleteRentBook(UserBookDto userBookDto, String resourceName, String apiPath) {
-        if(userBookDto == null){
+    public ResponseDto deleteRentBook(String resourceId, String resourceName, String apiPath) {
+        if(resourceId == null){
             throw new BadRequestException("Input can not be null.");
         }
 
         List<BookRent> rb;
 
         if("Book".equals(resourceName)) {
-
-            Book bk = bookRepository.findByTitleAndAuthor(userBookDto.getTitle(), userBookDto.getAuthor());
-            if (bk == null) {
-                throw new ResourceNotFoundException(String.format("Book with title: %s and book author: %s not found.",
-                        userBookDto.getTitle(), userBookDto.getAuthor()));
-            }
+            Book bk = bookRepository.findById(resourceId).orElseThrow( ()->
+                new ResourceNotFoundException(String.format("Book not found given input data bookId: %s ",resourceId)));
 
            rb = bookRentRepository.findByBook(bk);
 
@@ -58,11 +53,10 @@ public class DeleteUserBookRentService {
         }
 
         if("User".equals(resourceName)) {
-            LibraryUser user = libraryUserRepository.findByPhoneNumber(userBookDto.getPhoneNumber());
-            if (user == null) {
-                throw new ResourceNotFoundException(String.format("User with phone number: %s not found."
-                        , userBookDto.getPhoneNumber()));
-            }
+            LibraryUser user = libraryUserRepository.findById(resourceId)
+                    .orElseThrow(()-> new ResourceNotFoundException(
+                        String.format("User not found given input data userId: %s", resourceId))
+                    );
             rb = bookRentRepository.findByLibraryUser(user);
             if (rb.isEmpty()) {
                 libraryUserRepository.delete(user);
@@ -78,24 +72,24 @@ public class DeleteUserBookRentService {
         return fail(apiPath);
     }
 
-    private LibraryResponseDto getResponse(String apiPath) {
-        LibraryResponseDto lb = new LibraryResponseDto();
-        lb.setTimestamp(getTime());
-        lb.setStatus(200);
-        lb.setDescription("Ok");
-        lb.setMessage("Deleted successfully.");
-        lb.setApiPath(apiPath);
-        return lb;
+    private ResponseDto getResponse(String apiPath) {
+        ResponseDto resp = new ResponseDto();
+        resp.setTimestamp(getTime());
+        resp.setStatus(200);
+        resp.setDescription("Ok");
+        resp.setMessage("Deleted successfully.");
+        resp.setApiPath(apiPath);
+        return resp;
     }
 
-    private LibraryResponseDto fail(String apiPath) {
-        LibraryResponseDto lb = new LibraryResponseDto();
-        lb.setTimestamp(getTime());
-        lb.setStatus(417);
-        lb.setDescription("Fail");
-        lb.setMessage("Deletion failed.");
-        lb.setApiPath(apiPath);
-        return lb;
+    private ResponseDto fail(String apiPath) {
+        ResponseDto resp = new ResponseDto();
+        resp.setTimestamp(getTime());
+        resp.setStatus(417);
+        resp.setDescription("Fail");
+        resp.setMessage("Deletion failed.");
+        resp.setApiPath(apiPath);
+        return resp;
     }
 
 

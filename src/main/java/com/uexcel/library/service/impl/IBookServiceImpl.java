@@ -1,6 +1,7 @@
 package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.Book;
+import com.uexcel.library.Entity.Genre;
 import com.uexcel.library.dto.*;
 
 import com.uexcel.library.exception.BadRequestException;
@@ -31,21 +32,17 @@ public class IBookServiceImpl implements IBookService {
      */
     @Override
     public ResponseDto createBook(BookRequestDto bookRequestDto) {
-        Book bk = bookRepository.findByTitleAndAuthor(bookRequestDto.getTitle(), bookRequestDto.getAuthor());
+
+        checkBookExist(bookRequestDto.getTitle(), bookRequestDto.getAuthor());
+        
         ResponseDto rs = new ResponseDto();
-
-        if (bk != null) {
-            throw new BadRequestException(
-                    String.format("A book has same title: %s and author: %s",
-                            bookRequestDto.getTitle(), bookRequestDto.getTitle())
-            );
-        }
-
-         LibraryResponseDto lb = genreService.fetchGenreByName(bookRequestDto.getGenre());
+        
+         Genre genre = genreService.fetchGenreByName(bookRequestDto.getGenre());
 
         Book book = BookMapper.mapToNewBook(bookRequestDto, new Book());
-        book.setGenre(lb.getGenre());
+        book.setGenre(genre);
         bookRepository.save(book);
+        rs.setTimestamp(IBookService.getTime());
         rs.setStatus(201);
         rs.setDescription("Created");
         rs.setMessage("Book created successfully.");
@@ -62,10 +59,30 @@ public class IBookServiceImpl implements IBookService {
 
         return BookMapper.mapToBookDto(book,new BookDto());
     }
+    
 
     @Override
-    public ResponseDto updateBook(BookRequestDto bookRequestDto) {
-        return null;
+    public ResponseDto updateBook(BookDto bookDto) {
+        Book bk = null;
+        if (bookDto != null && bookDto.getId() != null) {
+            bk = bookRepository.findById(bookDto.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                                    "Book not found given input data bookId: " + bookDto.getId())
+                    );
+        }
+        if(!bk.getAuthor().equalsIgnoreCase(bookDto.getAuthor())||
+                !bk.getTitle().equalsIgnoreCase(bookDto.getTitle())){
+            checkBookExist(bookDto.getTitle(), bookDto.getAuthor());
+
+        }
+        bookRepository.save(BookMapper.mapToUpdateBook(bookDto,bk));
+        ResponseDto rsp = new ResponseDto();
+        rsp.setTimestamp(IBookService.getTime());
+        rsp.setStatus(201);
+        rsp.setDescription("Updated");
+        rsp.setMessage("Book updated successfully.");
+        rsp.setApiPath("uri=/api/update-book");
+        return  rsp;
     }
 
 
@@ -101,13 +118,31 @@ public class IBookServiceImpl implements IBookService {
     }
 
     @Override
-    public LibraryResponseDto deleteBook(String title, String author) {
-        UserBookDto ubd = new UserBookDto();
-        ubd.setTitle(title);
-        ubd.setAuthor(author);
-       return deleteUserBookRentService
-               .deleteRentBook(ubd,"Book","uri=/api/delete-book");
+    public ResponseDto deleteBook(String title, String author,String bookId) {
 
+        if(title == null && author == null && bookId == null) {
+            throw new BadRequestException("Input can not be null");
+        }
+
+        if(bookId == null || bookId.isEmpty()) {
+            Book book = bookRepository.findByTitleAndAuthor(title, author);
+            IBookService.validateBookNotNull(book, title, author);
+            bookId = book.getId();
+        }
+       return deleteUserBookRentService
+               .deleteRentBook(bookId,"Book","uri=/api/delete-book");
+
+    }
+    
+    private void checkBookExist(String title, String author) {
+        
+        Book bk = bookRepository.findByTitleAndAuthor(title, author);
+        
+        if (bk != null) {
+            throw new BadRequestException(
+                    String.format("A book has same title: %s and author: %s", title, author)
+            );
+        }
     }
 
 }

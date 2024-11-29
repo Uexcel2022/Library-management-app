@@ -29,15 +29,14 @@ public class BookDto{
     private String edition;
     @Past(message = "Publish date should be less than today.")
     private LocalDate publishedDate;
+    @Positive(message = "Price must be greater than zero.")
     private double price;
-    @PositiveOrZero(message = "Borrow copy must be positive or zero.")
     @PositiveOrZero(message = "Quantity must be positive or zero.")
     private int quantity;
-    @Positive(message = "Price must be greater than zero.")
+    @PositiveOrZero(message = "Borrow copy must be positive or zero.")
     private int borrowed;
     @PositiveOrZero(message = "Available books must be positive or zero.")
     private int available;
-    @Pattern(regexp = "[A-Za-z]+",message = "Genre should contain only alphabets.")
     private Genre genre;
 
 }
