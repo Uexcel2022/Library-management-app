@@ -3,7 +3,6 @@ package com.uexcel.library.authentication;
 import com.uexcel.library.Entity.Employee;
 import com.uexcel.library.repositoty.EmployeeRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
