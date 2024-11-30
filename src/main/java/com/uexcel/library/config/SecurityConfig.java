@@ -30,6 +30,7 @@ public class SecurityConfig {
                                .requestMatchers("/api/update-book","/api/update-user").hasAuthority("ADMIN")
                                .requestMatchers("api/add-employee","/api/fetch-employee").hasAuthority("ADMIN")
                                .requestMatchers("/api/delete-employee","/api/delete-rent").hasAuthority("ADMIN")
+                               .requestMatchers("api/pwd-chg-admin").hasAuthority("ADMIN")
                                .anyRequest()
                                .authenticated())
                .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))

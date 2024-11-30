@@ -42,6 +42,14 @@ private final Logger logger = LoggerFactory.getLogger(GlobalException.class);
 
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ResponseDto>
+    handleUnauthorizedException(UnauthorizedException e, WebRequest webRequest) {
+        return   ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ResponseDto(getTime(),401,"Unauthorized",
+                        e.getMessage(),webRequest.getDescription(false)));
+    }
+
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ResponseDto>
