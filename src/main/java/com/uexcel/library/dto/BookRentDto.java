@@ -19,6 +19,6 @@ public class BookRentDto {
     @Positive(message = "Amount must be greater than zero.")
     private double amount;
     private BookDto book;
-    private LibraryUserDto libraryUser;
+    private UserDto libraryUser;
 
 }

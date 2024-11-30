@@ -11,12 +11,18 @@ import lombok.ToString;
 
 @Schema(name = "LibraryUser",description = "This schema will hold information about the user.")
 @Getter @Setter @ToString
-public class LibraryUserDto {
+public class UserDto {
     private String id;
+    @NotNull(message = "first name is required.")
+    @NotEmpty(message = "first name is required.")
     @Pattern(regexp = "[A-Za-z]+",message = "First name should contain only alphabet characters.")
     private String firstName;
+    @NotNull(message = "Last name is required.")
+    @NotEmpty(message = "Last name is required.")
     @Pattern(regexp = "[A-Za-z]+",message = "Last name should contain only alphabet characters.")
     private String lastName;
+    @NotNull(message = "Phone number is required")
+    @NotEmpty(message = "Phone number is required")
     @Pattern(regexp = "0[7-9][01][0-9]{8}",message = "Please enter a valid Nigeria phone number.")
     private String phoneNumber;
     @Email(message = "Please enter a valid email address.")

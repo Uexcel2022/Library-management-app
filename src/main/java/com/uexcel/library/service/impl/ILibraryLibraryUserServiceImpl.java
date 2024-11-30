@@ -2,8 +2,7 @@ package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.LibraryUser;
 import com.uexcel.library.dto.ResponseDto;
-import com.uexcel.library.dto.UserBookDto;
-import com.uexcel.library.dto.LibraryUserDto;
+import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.UserMapper;
@@ -25,9 +24,12 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
      * @return status and message
      */
     @Override
-    public ResponseDto createUser(LibraryUserDto lud) {
+    public ResponseDto createUser(UserDto lud) {
+        if (lud == null){
+            throw new BadRequestException("Library user input is null.");
+        }
+        checkForExistUser(lud.getPhoneNumber(), lud.getEmail());
 
-        checkForExistUser(lud);
         ResponseDto rsp = new ResponseDto();
         libraryUserRepository.save(UserMapper.mapToUser(lud,new LibraryUser()));
 
@@ -39,12 +41,13 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
     }
 
     @Override
-    public LibraryUserDto fetchUser(String phoneNumber) {
+    public UserDto fetchUser(String phoneNumber) {
+
         LibraryUser lUser = libraryUserRepository.findByPhoneNumber(phoneNumber);
 
         ILibraryUserService.validateUserNotNull(lUser,phoneNumber);
 
-        return UserMapper.mapToUserDto(lUser,new LibraryUserDto());
+        return UserMapper.mapToUserDto(lUser,new UserDto());
         }
 
     /**
@@ -64,28 +67,30 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
     }
 
     @Override
-    public ResponseDto updateUser(LibraryUserDto libraryUserDto) {
-        if (libraryUserDto == null){
-            throw new BadRequestException("The library user is null.");
+    public ResponseDto updateUser(UserDto lud) {
+        if (lud == null){
+            throw new BadRequestException("The library user input is null.");
         }
 
-        if(libraryUserDto.getId() == null || libraryUserDto.getId().isEmpty()){
+        if(lud.getId() == null || lud.getId().isEmpty()){
             throw new  BadRequestException("User id is not found.");
         }
 
-        LibraryUser lUser = libraryUserRepository.findById(libraryUserDto.getId())
+        LibraryUser toUpdateUser = libraryUserRepository.findById(lud.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("User not found given input data userId: %s", libraryUserDto.getId()))
+                        String.format("User not found given input data userId: %s", lud.getId()))
                 );
 
-        if(!lUser.getPhoneNumber().equals(libraryUserDto.getPhoneNumber()) ||
-                !lUser.getEmail().equalsIgnoreCase(libraryUserDto.getEmail())){
-
-            checkForExistUser(libraryUserDto);
+        if(!toUpdateUser.getPhoneNumber().equals(lud.getPhoneNumber())){
+            checkForExistUser(lud.getPhoneNumber(),"0");
 
         }
 
-        libraryUserRepository.save(UserMapper.mapToUser(libraryUserDto,lUser));
+        if(!toUpdateUser.getEmail().equalsIgnoreCase(lud.getEmail())){
+            checkForExistUser("0",lud.getPhoneNumber());
+        }
+
+        libraryUserRepository.save(UserMapper.mapToUser(lud, toUpdateUser));
 
         ResponseDto rsp = new ResponseDto();
         rsp.setStatus(200);
@@ -94,27 +99,27 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
         return rsp;
     }
 
-    private void checkForExistUser(LibraryUserDto lud){
-        LibraryUser inDBUserPhoneNumber = libraryUserRepository.findByPhoneNumber(lud.getPhoneNumber());
-        LibraryUser inDBUserEmail = libraryUserRepository.findByEmail(lud.getEmail());
+    private void checkForExistUser(String phoneNumber, String email){
+        LibraryUser inDBUserPhoneNumber = libraryUserRepository.findByPhoneNumber(phoneNumber);
+        LibraryUser inDBUserEmail = libraryUserRepository.findByEmailIgnoreCase(email);
 
         if(inDBUserPhoneNumber != null && inDBUserEmail != null){
                 throw new BadRequestException(
                         String.format("The the phone number %s and email address %s haven been used.",
-                        lud.getPhoneNumber(),lud.getEmail())
+                                inDBUserPhoneNumber.getPhoneNumber(),inDBUserEmail.getEmail())
                 );
             }
 
-            if(inDBUserPhoneNumber!= null && inDBUserPhoneNumber.getPhoneNumber().equals(lud.getPhoneNumber())){
+            if(inDBUserPhoneNumber!= null){
                 throw new BadRequestException(
-                        String.format("The phone number %s has been used.", lud.getPhoneNumber())
+                        String.format("The phone number %s has been used.", inDBUserPhoneNumber.getPhoneNumber())
                 );
 
             }
 
-            if(inDBUserEmail != null && inDBUserEmail.getEmail().equalsIgnoreCase(lud.getEmail())){
+            if(inDBUserEmail != null){
                 throw new BadRequestException(
-                        String.format("The email address %s has been used.", lud.getEmail())
+                        String.format("The email address %s has been used.", inDBUserEmail.getEmail())
                 );
             }
 

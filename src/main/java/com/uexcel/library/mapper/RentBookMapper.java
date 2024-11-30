@@ -4,7 +4,7 @@ package com.uexcel.library.mapper;
 import com.uexcel.library.Entity.BookRent;
 import com.uexcel.library.dto.BookDto;
 import com.uexcel.library.dto.BookRentRequestDto;
-import com.uexcel.library.dto.LibraryUserDto;
+import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.dto.BookRentDto;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ public class RentBookMapper {
         bookRentDto.setReturned(bookRent.isReturned());
         bookRentDto.setQuantity(bookRent.getQuantity());
         bookRentDto.setAmount(bookRent.getAmount());
-        bookRentDto.setLibraryUser(UserMapper.mapToUserDto(bookRent.getLibraryUser(),new LibraryUserDto()));
+        bookRentDto.setLibraryUser(UserMapper.mapToUserDto(bookRent.getLibraryUser(),new UserDto()));
         bookRentDto.setBook(BookMapper.mapToBookDto(bookRent.getBook(),new BookDto()));
         return bookRentDto;
     }

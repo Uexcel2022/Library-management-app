@@ -1,6 +1,6 @@
 package com.uexcel.library.controller;
 
-import com.uexcel.library.dto.LibraryUserDto;
+import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.service.ILibraryUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,8 +45,8 @@ public class LibraryUserController {
     )
 
     @PostMapping("/create-user")
-    public ResponseEntity<ResponseDto> createUser(@Valid @RequestBody LibraryUserDto libraryUserDto){
-        ResponseDto lib = userService.createUser(libraryUserDto);
+    public ResponseEntity<ResponseDto> createUser(@Valid @RequestBody UserDto userDto){
+        ResponseDto lib = userService.createUser(userDto);
         return ResponseEntity.status(lib.getStatus()).body(lib);
     }
 
@@ -56,7 +56,7 @@ public class LibraryUserController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Ok",
-                            content = @Content(schema = @Schema(implementation = LibraryUserDto.class))
+                            content = @Content(schema = @Schema(implementation = UserDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
@@ -74,8 +74,8 @@ public class LibraryUserController {
     )
 
     @GetMapping("/fetch-user")
-    public ResponseEntity<LibraryUserDto> fetchUser(@RequestParam String phoneNumber){
-        LibraryUserDto lib = userService.fetchUser(phoneNumber);
+    public ResponseEntity<UserDto> fetchUser(@RequestParam String phoneNumber){
+        UserDto lib = userService.fetchUser(phoneNumber);
         return ResponseEntity.ok().body(lib);
     }
 
@@ -128,8 +128,8 @@ public class LibraryUserController {
     )
 
     @PutMapping("/update-user")
-    public ResponseEntity<ResponseDto> updateUser(@Valid @RequestBody LibraryUserDto libraryUserDto){
-        ResponseDto rsp = userService.updateUser(libraryUserDto);
+    public ResponseEntity<ResponseDto> updateUser(@Valid @RequestBody UserDto userDto){
+        ResponseDto rsp = userService.updateUser(userDto);
         return ResponseEntity.status(rsp.getStatus()).body(rsp);
     }
 }

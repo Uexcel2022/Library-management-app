@@ -6,8 +6,8 @@ import com.uexcel.library.dto.BookRequestDto;
 
 public class BookMapper{
     public static Book mapToNewBook(BookRequestDto bookRequestDto, Book book){
-        book.setAuthor(bookRequestDto.getAuthor());
         book.setTitle(bookRequestDto.getTitle());
+        book.setAuthor(bookRequestDto.getAuthor());
         book.setIsbn(bookRequestDto.getIsbn());
         book.setEdition(bookRequestDto.getEdition());
         book.setPublishedDate(bookRequestDto.getPublishedDate());
@@ -21,9 +21,9 @@ public class BookMapper{
     }
 
     public static Book mapToUpdateBook(BookDto bookDto, Book book){
+        book.setTitle(bookDto.getTitle());
         book.setId(bookDto.getId());
         book.setAuthor(bookDto.getAuthor());
-        book.setTitle(bookDto.getTitle());
         book.setIsbn(bookDto.getIsbn());
         book.setEdition(bookDto.getEdition());
         book.setPublishedDate(bookDto.getPublishedDate());

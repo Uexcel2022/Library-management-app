@@ -33,7 +33,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 
         Employee emp;
         if(username.contains("@")) {
-            emp = employeeRepository.findByEmail(username);
+            emp = employeeRepository.findByEmailIgnoreCase(username);
         } else{
             emp = employeeRepository.findByPhoneNumber(username);
         }

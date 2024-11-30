@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LibraryUserRepository extends JpaRepository<LibraryUser, String> {
-    LibraryUser findByEmail(String email);
-
+    LibraryUser findByEmailIgnoreCase(String email);
     LibraryUser findByPhoneNumber(String phoneNumber);
 }

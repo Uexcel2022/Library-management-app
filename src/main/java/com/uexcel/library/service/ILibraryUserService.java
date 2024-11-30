@@ -1,19 +1,19 @@
 package com.uexcel.library.service;
 
 import com.uexcel.library.Entity.LibraryUser;
-import com.uexcel.library.dto.LibraryUserDto;
+import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.exception.ResourceNotFoundException;
 
 public interface ILibraryUserService {
     /**
-     * @param libraryUserDto - contains user information
+     * @param userDto - contains user information
      * @return status and message
      */
-    ResponseDto createUser(LibraryUserDto libraryUserDto);
+    ResponseDto createUser(UserDto userDto);
 
 
-    LibraryUserDto fetchUser(String phoneNumber);
+    UserDto fetchUser(String phoneNumber);
 
     /**
      * @param phoneNumber - will hold user phone number
@@ -21,7 +21,7 @@ public interface ILibraryUserService {
      */
     ResponseDto deleteUser(String phoneNumber);
 
-    ResponseDto updateUser(LibraryUserDto libraryUserDto);
+    ResponseDto updateUser(UserDto userDto);
 
     static void validateUserNotNull(LibraryUser user,String phoneNumber) {
         if(user == null) {
