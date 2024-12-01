@@ -161,7 +161,7 @@ public class IRentBookImpl implements IRentBookService {
         }
 
         if(bookId==null && phoneNumber==null  && returned) {
-            List<BookRent> rt = rents.stream().filter(vr-> vr.isReturned()).toList();
+            List<BookRent> rt = rents.stream().filter(BookRent::isReturned).toList();
             if (rt.isEmpty()) {
                 throw new BadRequestException("There is no book rent details available.");
             }
