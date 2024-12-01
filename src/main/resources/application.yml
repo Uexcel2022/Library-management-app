@@ -17,10 +17,10 @@ management:
     web:
       exposure:
         include: health
-springdoc:
-  api-docs:
-    enabled: true
-  show-actuator: true
+#springdoc:
+#  api-docs:
+#    enabled: true
+#  show-actuator: true
 
 employee:
   firstName: "Steven"

@@ -104,7 +104,8 @@ public class BookRentController {
 
     @Operation(
             summary = "REST API To Fetch Rent Details",
-            description = "Wisdom Spring Library REST API to fetch, sort and delete specific rent details using rentId.",
+            description = "Wisdom Spring Library REST API to fetch rented books and can filter by bookId, " +
+                    "phoneNumber and returned status and delete specific rent details using rentId.",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Ok",

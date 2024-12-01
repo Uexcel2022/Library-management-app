@@ -1,5 +1,6 @@
 package com.uexcel.library.controller;
 
+import com.uexcel.library.dto.AdminPasswordChangeDto;
 import com.uexcel.library.dto.PasswordChangeDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.service.IPasswordChangeService;
@@ -22,7 +23,7 @@ public class ChangePasswordController {
 
     @Operation(
             summary = "REST API To Update Password",
-            description = "REST API to update password accessible to admin only in Wisdom Spring Library",
+            description = "Wisdom Spring Library REST API to update password. Accessible to admin only.",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Ok",
@@ -44,9 +45,8 @@ public class ChangePasswordController {
     )
 
     @PutMapping("/pwd-chg-admin")
-    public ResponseEntity<ResponseDto> AdminChangePassword(
-            @RequestBody PasswordChangeDto passwordChangeDto, @RequestParam String email){
-        ResponseDto resp = passwordChangeService.passwordChangeAdmin(passwordChangeDto, email);
+    public ResponseEntity<ResponseDto> AdminChangePassword(@RequestBody AdminPasswordChangeDto AdminCPD){
+        ResponseDto resp = passwordChangeService.passwordChangeAdmin(AdminCPD);
         return ResponseEntity.status(resp.getStatus()).body(resp);
     }
 

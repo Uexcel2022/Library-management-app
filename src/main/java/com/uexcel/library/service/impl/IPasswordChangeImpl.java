@@ -1,6 +1,7 @@
 package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.Employee;
+import com.uexcel.library.dto.AdminPasswordChangeDto;
 import com.uexcel.library.dto.PasswordChangeDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.exception.BadRequestException;
@@ -23,51 +24,45 @@ public class IPasswordChangeImpl implements IPasswordChangeService {
     private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
-    public ResponseDto passwordChangeAdmin(PasswordChangeDto passwordChangeDto,String email) {
-
-        if(email == null || email.isEmpty()){
-            throw new  BadRequestException("Password Change Dto is Null.");
+    public ResponseDto passwordChangeAdmin(AdminPasswordChangeDto AdminPCD) {
+        if(AdminPCD == null){
+            throw new  BadRequestException("Password Change Dto is Null");
+        }
+        if(!AdminPCD.getConfirmPassword().equals(AdminPCD.getNewPassword())){
+            throw new  BadRequestException("Confirm password Not Match");
         }
 
-        Employee empAdmin = validateEmployee(passwordChangeDto);
-        if(!empAdmin.getRole().equals("ADMIN")) {
-            logger.debug("Security threat user: {}", empAdmin.getEmail());
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Employee empAdmin = employeeRepository.findByEmailIgnoreCase(name);
+
+        if(empAdmin == null){
+            logger.debug("User in the in security context holder not found in the database.");
             throw new UnauthorizedException("You are not authorized to perform this operation");
         }
 
-        Employee emp = employeeRepository.findByEmailIgnoreCase(email);
+        if(!empAdmin.getRole().equals("ADMIN")) {
+            logger.debug("Security threat user: {}", empAdmin.getEmail());
+            throw new UnauthorizedException("You are not authorized to perform this operation.");
+        }
+
+        Employee emp = employeeRepository.findByEmailIgnoreCase(AdminPCD.getEmail());
         if(emp == null) {
-            throw new  BadRequestException("Employee not found given input data email: "+email);
+            throw new  BadRequestException("Employee not found given input data email: "+AdminPCD.getEmail());
         }
 
-        if(!bCryptPasswordEncoder.matches(passwordChangeDto.getOldPassword(),emp.getPassword())){
-            throw new  BadRequestException("Invalid password.");
-        }
-
-        emp.setPassword(bCryptPasswordEncoder.encode(passwordChangeDto.getNewPassword()));
+        emp.setPassword(bCryptPasswordEncoder.encode(AdminPCD.getNewPassword()));
         employeeRepository.save(emp);
         return getResponse();
     }
+
 
     @Override
-    public ResponseDto passwordChangeEmployee(PasswordChangeDto passwordChangeDto) {
+    public ResponseDto passwordChangeEmployee(PasswordChangeDto PCD) {
 
-        Employee emp = validateEmployee(passwordChangeDto);
-
-        if(!bCryptPasswordEncoder.matches(passwordChangeDto.getOldPassword(),emp.getPassword())){
-            throw new  BadRequestException("Invalid password.");
-        }
-        emp.setPassword(bCryptPasswordEncoder.encode(passwordChangeDto.getNewPassword()));
-        employeeRepository.save(emp);
-        return getResponse();
-    }
-
-
-    private Employee validateEmployee(PasswordChangeDto pcd) {
-        if(pcd == null){
+        if(PCD == null){
             throw new  BadRequestException("Password Change Dto is Null");
         }
-        if(!pcd.getConfirmNewPassword().equals(pcd.getNewPassword())){
+        if(!PCD.getConfirmPassword().equals(PCD.getNewPassword())){
             throw new  BadRequestException("Confirm password Not Match");
         }
 
@@ -75,11 +70,18 @@ public class IPasswordChangeImpl implements IPasswordChangeService {
         Employee emp = employeeRepository.findByEmailIgnoreCase(name);
 
         if(emp == null){
-            logger.debug("User not found in security context");
+            logger.debug("User in the in security context holder not found in the database.");
             throw new UnauthorizedException("You are not authorized to perform this operation");
         }
-        return emp;
+
+        if(!bCryptPasswordEncoder.matches(PCD.getOldPassword(),emp.getPassword())){
+            throw new  BadRequestException("Invalid password.");
+        }
+        emp.setPassword(bCryptPasswordEncoder.encode(PCD.getNewPassword()));
+        employeeRepository.save(emp);
+        return getResponse();
     }
+
 
     private ResponseDto getResponse() {
         ResponseDto rsp = new ResponseDto();

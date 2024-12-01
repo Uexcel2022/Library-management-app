@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.uexcel.library.service.IBookService.getTime;
 import static com.uexcel.library.service.IBookService.validateBookNotNull;
 import static com.uexcel.library.service.ILibraryUserService.validateUserNotNull;
 

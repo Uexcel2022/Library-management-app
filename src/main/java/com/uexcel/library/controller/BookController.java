@@ -115,7 +115,7 @@ public class BookController {
 
     @Operation(
             summary = "REST API To Fetch Book Details",
-            description = "REST API to fetch book details in Wisdom Spring Library",
+            description = "Wisdom Spring Library REST API to fetch book details and can filter by author and Genre.",
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Ok",
