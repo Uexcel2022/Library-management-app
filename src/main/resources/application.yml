@@ -31,10 +31,11 @@ management:
     web:
       exposure:
         include: "*"
-#springdoc:
-#  api-docs:
-#    enabled: true
-#  show-actuator: true
+
+  info:
+    env:
+      enabled: true
+
 
 employee:
   firstName: "Steven"
@@ -43,3 +44,10 @@ employee:
   email: "steven@yahoo.com"
   password: "steven"
   role: "ADMIN"
+
+info:
+  app:
+    name: library
+    description: "Wisdom Spring Library"
+    version: "0.0.1"
+
