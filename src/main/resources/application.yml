@@ -9,6 +9,20 @@ spring:
   jpa:
     defer-datasource-initialization: true
 
+  data:
+    rest:
+      base-path: "/data-api"
+
+  boot:
+    admin:
+      client:
+        url: http://localhost:9000
+        instance:
+          metadata:
+            user:
+              name: uexcel@gmail.com
+              password: 1234
+
 logging:
   level:
     com.uexcel: DEBUG
@@ -16,7 +30,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: "*"
 #springdoc:
 #  api-docs:
 #    enabled: true

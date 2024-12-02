@@ -22,7 +22,7 @@ public class SecurityConfig {
        return http
                .csrf(AbstractHttpConfigurer::disable)
                .authorizeHttpRequests(
-                       r->r.requestMatchers("/h2-console/**")
+                       r->r.requestMatchers("/h2-console/**","/data-api")
                                .permitAll()
                                .requestMatchers("/swagger-ui/**","/v3/api-doc*/**").permitAll()
                                .requestMatchers("/api/fetch-all-books").permitAll()

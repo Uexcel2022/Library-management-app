@@ -26,7 +26,6 @@ public class LibraryApplication {
 	}
 	@PostConstruct
 	public void  addAdMin(){
-		System.out.println(lAdmin);
 		lAdmin.setPassword(bCrypt.encode(lAdmin.getPassword()));
 		employeeRepository.save(EmployeeMapper
 				.mapToNewEmp(lAdmin,new Employee()));
