@@ -38,12 +38,12 @@ management:
 
 
 employee:
-  firstName: "Steven"
-  lastName: "Jokin"
-  phoneNumber : "09088108115"
-  email: "steven@yahoo.com"
-  password: "steven"
-  role: "ADMIN"
+  firstName: ${FIRST_NAME:Steven}
+  lastName: ${LAST_NAME:Jokin}
+  phoneNumber : ${PHONE_NUMBER:09088108115}
+  email: ${EMAIL:steven@yahoo.com}
+  password: ${PASSWORD:steven}
+  role: ${ROLE:ADMIN}
 
 info:
   app:
