@@ -29,9 +29,9 @@ public class SecurityConfigNotProd {
                         .ignoringRequestMatchers("/h2-console/**")
                 )
                 .authorizeHttpRequests(
-                        r->r.requestMatchers("/h2-console/**","/data-api","/api/csrf-token")
+                        r->r.requestMatchers("/h2-console/**","/data-api","/api/csrf-token","/error")
                                 .permitAll()
-                                .requestMatchers("/swagger-ui/**","/v3/api-doc*/**","/error").permitAll()
+                                .requestMatchers("/swagger-ui/**","/v3/api-doc*/**").authenticated()
                                 .requestMatchers("/api/fetch-all-books").permitAll()
                                 .requestMatchers("/api/delete-book","/api/delete-user").hasAuthority("ADMIN")
                                 .requestMatchers("/api/update-book","/api/update-user").hasAuthority("ADMIN")
