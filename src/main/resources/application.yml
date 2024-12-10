@@ -1,6 +1,8 @@
 spring:
   application:
-    name: ${SPRING_APPLICATION_NAME:library}
+    name: ${SPRING_APP_NAME:library}
+  config:
+    import: application_prod.yml
   datasource:
     url: ${DATABASE_URL:jdbc:h2:mem:testdb}
     driver-class-name: ${DRIVER_CLASS_NAME:org.h2.Driver}
@@ -8,7 +10,6 @@ spring:
     password: ${DATABASE_PASSWORD:}
   jpa:
     defer-datasource-initialization: true
-
 
   data:
     rest:
@@ -23,10 +24,8 @@ spring:
             user:
               name: ${BOOT_ADMIN_CLIENT_INSTANCE_METADATA_USER:uexcel@gmail.com}
               password: ${BOOT_ADMIN_CLIENT_INSTANCE_METADATA_PASSWORD:1234}
-  config:
-    import: application_prod.yml
   profiles:
-    active: prod
+    active: ${SPRING_PROFILES_ACTIVE:prod}
 
 logging:
   level:
@@ -54,6 +53,7 @@ info:
     name: library
     description: "Wisdom Spring Library"
     version: "0.0.1"
+
 springdoc:
   api-docs:
     enabled: true

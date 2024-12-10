@@ -36,7 +36,6 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
         rsp.setStatus(201);
         rsp.setDescription("Created");
         rsp.setMessage("User created successfully.");
-        rsp.setApiPath("uri=/api/create-user");
         return rsp;
     }
 

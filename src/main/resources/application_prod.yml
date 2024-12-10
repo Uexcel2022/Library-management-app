@@ -1,6 +1,9 @@
 spring:
   application:
     name: ${SPRING_APPLICATION_NAME:library}
+  config:
+    activate:
+      on-profile: prod
   datasource:
     url: ${DATABASE_URL:jdbc:h2:mem:testdb}
     driver-class-name: ${DRIVER_CLASS_NAME:org.h2.Driver}
@@ -15,13 +18,10 @@ spring:
             user:
               name: ${BOOT_ADMIN_CLIENT_INSTANCE_METADATA_USER:uexcel@gmail.com}
               password: ${BOOT_ADMIN_CLIENT_INSTANCE_METADATA_PASSWORD:1234}
-  config:
-    activate:
-      on-profile: prod
 
 logging:
   level:
-    com.uexcel: ${LOGGING_LEVEL_COM_UEXCEL:error}
+    com.uexcel: ${LOGGING_LEVEL_COM_UEXCEL:ERROR}
 management:
   endpoints:
     web:
@@ -32,7 +32,7 @@ management:
       enabled: true
 
 employee:
-  firstName: ${FIRST_NAME:Steven}
+  firstName: ${FIRST_NAME:production}
   lastName: ${LAST_NAME:Jokin}
   phoneNumber : ${PHONE_NUMBER:09088108115}
   email: ${EMAIL:steven@yahoo.com}
@@ -44,5 +44,11 @@ info:
     name: library
     description: "Wisdom Spring Library"
     version: "0.0.1"
+    env: production
 
-
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    csrf:
+      enabled: true

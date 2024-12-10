@@ -45,7 +45,6 @@ public class IEmployeeServiceImpl implements IEmployeeService {
         empDto.setPassword(passwordEncoder.encode(empDto.getPassword()));
         employeeRepository.save(EmployeeMapper.mapToNewEmp(empDto,new Employee()));
         ResponseDto rs = new ResponseDto();
-        rs.setTimestamp(getTime());
         rs.setStatus(201);
         rs.setDescription("Created");
         rs.setMessage("Employee created Successfully");
