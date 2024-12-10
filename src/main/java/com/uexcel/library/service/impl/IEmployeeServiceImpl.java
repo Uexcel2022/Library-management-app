@@ -10,8 +10,10 @@ import com.uexcel.library.mapper.EmployeeMapper;
 import com.uexcel.library.repositoty.EmployeeRepository;
 import com.uexcel.library.service.IEmployeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.password.CompromisedPasswordChecker;
+import org.springframework.security.authentication.password.CompromisedPasswordDecision;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +25,8 @@ import static com.uexcel.library.service.IBookService.getTime;
 @AllArgsConstructor
 public class IEmployeeServiceImpl implements IEmployeeService {
     private final EmployeeRepository employeeRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final CompromisedPasswordChecker passwordChecker;
 
     @Override
     public ResponseDto addEmployee(EmployeeDto empDto) {
@@ -31,8 +34,15 @@ public class IEmployeeServiceImpl implements IEmployeeService {
         if(empDto.getPassword()==null || empDto.getPassword().isEmpty()){
             throw new BadRequestException("Password is required.");
         }
+
+        if( passwordChecker.check(empDto.getPassword()).isCompromised()){
+            throw new BadRequestException(
+                    String.format("Password %s is compromised.",empDto.getPassword())
+            );
+        }
+
         checkEmployeeNotExist(empDto.getPhoneNumber(), empDto.getEmail());
-        empDto.setPassword(bCryptPasswordEncoder.encode(empDto.getPassword()));
+        empDto.setPassword(passwordEncoder.encode(empDto.getPassword()));
         employeeRepository.save(EmployeeMapper.mapToNewEmp(empDto,new Employee()));
         ResponseDto rs = new ResponseDto();
         rs.setTimestamp(getTime());

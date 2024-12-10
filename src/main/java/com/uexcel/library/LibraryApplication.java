@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @EnableConfigurationProperties(Admin.class)
@@ -20,13 +21,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class LibraryApplication {
 	private final EmployeeRepository employeeRepository;
 	private final Admin lAdmin;
-	private final BCryptPasswordEncoder bCrypt;
+	private final PasswordEncoder passwordEncoder;
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryApplication.class, args);
 	}
 	@PostConstruct
 	public void  addAdMin(){
-		lAdmin.setPassword(bCrypt.encode(lAdmin.getPassword()));
+		lAdmin.setPassword(passwordEncoder.encode(lAdmin.getPassword()));
 		employeeRepository.save(EmployeeMapper
 				.mapToNewEmp(lAdmin,new Employee()));
 	}

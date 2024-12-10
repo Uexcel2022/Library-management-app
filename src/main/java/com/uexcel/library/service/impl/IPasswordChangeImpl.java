@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.uexcel.library.service.IBookService.getTime;
@@ -22,7 +22,7 @@ import static com.uexcel.library.service.IBookService.getTime;
 public class IPasswordChangeImpl implements IPasswordChangeService {
     private final Logger logger = LoggerFactory.getLogger(IPasswordChangeImpl.class);
     private final EmployeeRepository employeeRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
     @Override
     public ResponseDto passwordChangeAdmin(AdminPasswordChangeDto AdminPCD) {
         if(AdminPCD == null){
@@ -50,7 +50,7 @@ public class IPasswordChangeImpl implements IPasswordChangeService {
             throw new  BadRequestException("Employee not found given input data email: "+AdminPCD.getEmail());
         }
 
-        emp.setPassword(bCryptPasswordEncoder.encode(AdminPCD.getNewPassword()));
+        emp.setPassword(passwordEncoder.encode(AdminPCD.getNewPassword()));
         employeeRepository.save(emp);
         return getResponse();
     }
@@ -74,10 +74,10 @@ public class IPasswordChangeImpl implements IPasswordChangeService {
             throw new UnauthorizedException("You are not authorized to perform this operation");
         }
 
-        if(!bCryptPasswordEncoder.matches(PCD.getOldPassword(),emp.getPassword())){
+        if(!passwordEncoder.matches(PCD.getOldPassword(),emp.getPassword())){
             throw new  BadRequestException("Invalid password.");
         }
-        emp.setPassword(bCryptPasswordEncoder.encode(PCD.getNewPassword()));
+        emp.setPassword(passwordEncoder.encode(PCD.getNewPassword()));
         employeeRepository.save(emp);
         return getResponse();
     }
