@@ -2,6 +2,7 @@ package com.uexcel.library.controller;
 
 import com.uexcel.library.dto.AdminPasswordChangeDto;
 import com.uexcel.library.dto.PasswordChangeDto;
+import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.service.IPasswordChangeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,15 +32,15 @@ public class ChangePasswordController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -60,15 +61,15 @@ public class ChangePasswordController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )

@@ -3,6 +3,7 @@ package com.uexcel.library.service.impl;
 import com.uexcel.library.Entity.Employee;
 import com.uexcel.library.admin.Admin;
 import com.uexcel.library.dto.EmployeeDto;
+import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.exception.BadRequestException;
@@ -10,8 +11,8 @@ import com.uexcel.library.mapper.EmployeeMapper;
 import com.uexcel.library.repositoty.EmployeeRepository;
 import com.uexcel.library.service.IEmployeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
-import org.springframework.security.authentication.password.CompromisedPasswordDecision;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,9 +46,9 @@ public class IEmployeeServiceImpl implements IEmployeeService {
         empDto.setPassword(passwordEncoder.encode(empDto.getPassword()));
         employeeRepository.save(EmployeeMapper.mapToNewEmp(empDto,new Employee()));
         ResponseDto rs = new ResponseDto();
-        rs.setStatus(201);
-        rs.setDescription("Created");
-        rs.setMessage("Employee created Successfully");
+        rs.setStatus(HttpStatus.CREATED.value());
+        rs.setDescription(HttpStatus.CREATED.getReasonPhrase());
+        rs.setMessage("Employee created Successfully.");
         return rs;
     }
 
@@ -70,9 +71,8 @@ public class IEmployeeServiceImpl implements IEmployeeService {
 
         employeeRepository.save(EmployeeMapper.mapToUpdate(employee,userDto));
         ResponseDto rs = new ResponseDto();
-        rs.setTimestamp(getTime());
-        rs.setStatus(200);
-        rs.setDescription("OK");
+        rs.setStatus(HttpStatus.OK.value());
+        rs.setDescription(HttpStatus.OK.getReasonPhrase());
         rs.setMessage("Employee updated Successfully");
         return rs;
     }
@@ -85,9 +85,8 @@ public class IEmployeeServiceImpl implements IEmployeeService {
                 );
         employeeRepository.delete(emp);
         ResponseDto rs = new ResponseDto();
-        rs.setTimestamp(getTime());
-        rs.setStatus(200);
-        rs.setDescription("Ok");
+        rs.setStatus(HttpStatus.OK.value());
+        rs.setDescription(HttpStatus.OK.getReasonPhrase());
         rs.setMessage("Employee deleted Successfully");
         return rs;
     }

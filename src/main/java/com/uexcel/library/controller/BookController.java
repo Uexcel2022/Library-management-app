@@ -2,6 +2,7 @@ package com.uexcel.library.controller;
 
 import com.uexcel.library.dto.BookDto;
 import com.uexcel.library.dto.BookRequestDto;
+import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.service.IBookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,11 +39,11 @@ public class BookController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -62,15 +63,15 @@ public class BookController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -92,23 +93,23 @@ public class BookController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
 
     @DeleteMapping("/delete-book")
     public ResponseEntity<ResponseDto> deleteBook(@RequestParam(required = false) String title,
-                                                  @RequestParam(required = false) String author,
-                                                  @RequestParam(required = false) String bookId) {
+                                                       @RequestParam(required = false) String author,
+                                                       @RequestParam(required = false) String bookId) {
         ResponseDto lb = bookService.deleteBook(title, author,bookId);
         return ResponseEntity.status(lb.getStatus()).body(lb);
     }
@@ -123,15 +124,15 @@ public class BookController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )

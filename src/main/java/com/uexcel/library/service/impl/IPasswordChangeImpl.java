@@ -11,11 +11,10 @@ import com.uexcel.library.service.IPasswordChangeService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import static com.uexcel.library.service.IBookService.getTime;
 
 @Service
 @AllArgsConstructor
@@ -85,9 +84,8 @@ public class IPasswordChangeImpl implements IPasswordChangeService {
 
     private ResponseDto getResponse() {
         ResponseDto rsp = new ResponseDto();
-        rsp.setTimestamp(getTime());
-        rsp.setStatus(200);
-        rsp.setDescription("Ok");
+        rsp.setStatus(HttpStatus.OK.value());
+        rsp.setDescription(HttpStatus.OK.getReasonPhrase());
         rsp.setMessage("Password updated successfully.");
         return rsp;
     }

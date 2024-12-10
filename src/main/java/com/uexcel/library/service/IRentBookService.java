@@ -13,10 +13,10 @@ public interface IRentBookService {
 
     /**
      * @param userBookDto - contains booking information
-     * @param rentId - rentId
+     * @param rentId      - rentId
      * @return return response status and body
      */
-    ResponseDto returnBook(UserBookDto userBookDto,String rentId);
+    ResponseDto returnBook(UserBookDto userBookDto, String rentId);
 
     ResponseDto deleteRentBook(UserBookDto userBookDto, String resourceName);
 

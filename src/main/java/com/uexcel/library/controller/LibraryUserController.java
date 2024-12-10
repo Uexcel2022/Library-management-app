@@ -1,7 +1,8 @@
 package com.uexcel.library.controller;
 
-import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.dto.ResponseDto;
+import com.uexcel.library.dto.UserDto;
+import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.service.ILibraryUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,18 +36,18 @@ public class LibraryUserController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
 
     @PostMapping("/create-user")
-    public ResponseEntity<ResponseDto> createUser(@Valid @RequestBody UserDto userDto){
-        ResponseDto lib = userService.createUser(userDto);
+    public ResponseEntity<ErrorResponseDto> createUser(@Valid @RequestBody UserDto userDto){
+        ErrorResponseDto lib = userService.createUser(userDto);
         return ResponseEntity.status(lib.getStatus()).body(lib);
     }
 
@@ -60,15 +61,15 @@ public class LibraryUserController {
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -89,15 +90,15 @@ public class LibraryUserController {
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -118,11 +119,11 @@ public class LibraryUserController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )

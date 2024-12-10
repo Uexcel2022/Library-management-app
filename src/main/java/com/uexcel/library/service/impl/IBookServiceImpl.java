@@ -13,6 +13,7 @@ import com.uexcel.library.service.IGenreService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -42,11 +43,9 @@ public class IBookServiceImpl implements IBookService {
         Book book = BookMapper.mapToNewBook(bookRequestDto, new Book());
         book.setGenre(genre);
         bookRepository.save(book);
-        rs.setTimestamp(IBookService.getTime());
-        rs.setStatus(201);
-        rs.setDescription("Created");
+        rs.setStatus(HttpStatus.CREATED.value());
+        rs.setDescription(HttpStatus.CREATED.getReasonPhrase());
         rs.setMessage("Book created successfully.");
-        rs.setApiPath("uri=/api/create-book");
         return rs;
     }
 
@@ -77,11 +76,9 @@ public class IBookServiceImpl implements IBookService {
         }
         bookRepository.save(BookMapper.mapToUpdateBook(bookDto,bk));
         ResponseDto rsp = new ResponseDto();
-        rsp.setTimestamp(IBookService.getTime());
-        rsp.setStatus(201);
-        rsp.setDescription("Updated");
+        rsp.setStatus(HttpStatus.OK.value());
+        rsp.setDescription(HttpStatus.OK.getReasonPhrase());
         rsp.setMessage("Book updated successfully.");
-        rsp.setApiPath("uri=/api/update-book");
         return  rsp;
     }
 
@@ -118,7 +115,7 @@ public class IBookServiceImpl implements IBookService {
     }
 
     @Override
-    public ResponseDto deleteBook(String title, String author,String bookId) {
+    public ResponseDto deleteBook(String title, String author, String bookId) {
 
         if(title == null && author == null && bookId == null) {
             throw new BadRequestException("Input can not be null");
@@ -130,7 +127,7 @@ public class IBookServiceImpl implements IBookService {
             bookId = book.getId();
         }
        return deleteUserBookRentService
-               .deleteRentBook(bookId,"Book","uri=/api/delete-book");
+               .deleteRentBook(bookId,"Book");
 
     }
     

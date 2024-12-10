@@ -1,6 +1,7 @@
 package com.uexcel.library.service.impl;
 
 import com.uexcel.library.Entity.LibraryUser;
+import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.exception.BadRequestException;
@@ -11,6 +12,7 @@ import com.uexcel.library.service.ILibraryUserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,17 +26,17 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
      * @return status and message
      */
     @Override
-    public ResponseDto createUser(UserDto lud) {
+    public ErrorResponseDto createUser(UserDto lud) {
         if (lud == null){
             throw new BadRequestException("Library user input is null.");
         }
         checkForExistUser(lud.getPhoneNumber(), lud.getEmail());
 
-        ResponseDto rsp = new ResponseDto();
+        ErrorResponseDto rsp = new ErrorResponseDto();
         libraryUserRepository.save(UserMapper.mapToUser(lud,new LibraryUser()));
 
-        rsp.setStatus(201);
-        rsp.setDescription("Created");
+        rsp.setStatus(HttpStatus.CREATED.value());
+        rsp.setDescription(HttpStatus.CREATED.getReasonPhrase());
         rsp.setMessage("User created successfully.");
         return rsp;
     }
@@ -62,7 +64,7 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
         ILibraryUserService.validateUserNotNull(lUser,phoneNumber);
 
         return deleteUserBookRentService
-                .deleteRentBook(lUser.getId(),"User","uri=/api/delete-user");
+                .deleteRentBook(lUser.getId(),"User");
     }
 
     @Override
@@ -92,8 +94,8 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
         libraryUserRepository.save(UserMapper.mapToUser(lud, toUpdateUser));
 
         ResponseDto rsp = new ResponseDto();
-        rsp.setStatus(200);
-        rsp.setDescription("Ok");
+        rsp.setStatus(HttpStatus.OK.value());
+        rsp.setDescription(HttpStatus.OK.getReasonPhrase());
         rsp.setMessage("User updated successfully.");
         return rsp;
     }

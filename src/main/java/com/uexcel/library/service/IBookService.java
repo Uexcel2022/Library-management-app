@@ -26,7 +26,7 @@ public interface IBookService {
 
     List<BookDto> fetchAllBooks(String author, String genre);
 
-    ResponseDto deleteBook(String title, String author,String bookId);
+    ResponseDto deleteBook(String title, String author, String bookId);
 
     static String getTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

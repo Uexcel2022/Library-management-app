@@ -37,11 +37,11 @@ public class BookRentController {
             ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -61,11 +61,11 @@ public class BookRentController {
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -73,7 +73,7 @@ public class BookRentController {
     public ResponseEntity<ResponseDto> returnBook(
             @Valid @RequestBody(required = false) UserBookDto userBookDto,
             @RequestParam(required = false) String rentId) {
-        ResponseDto rsp = rentBookService.returnBook(userBookDto,rentId);
+         ResponseDto rsp = rentBookService.returnBook(userBookDto,rentId);
         return ResponseEntity.status(rsp.getStatus()).body(rsp);
     }
 
@@ -87,11 +87,11 @@ public class BookRentController {
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -113,11 +113,11 @@ public class BookRentController {
                     ),
                     @ApiResponse(
                             responseCode = "404", description = "Not Found",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )

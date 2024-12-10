@@ -13,6 +13,7 @@ import com.uexcel.library.repositoty.LibraryUserRepository;
 import com.uexcel.library.service.IRentBookService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -133,9 +134,9 @@ public class IRentBookImpl implements IRentBookService {
         }
         bookRentRepository.deleteByBook((bk));
         ResponseDto rdt = new ResponseDto();
-        rdt.setStatus(200);
-        rdt.setDescription("Ok");
-        rdt.setMessage(resourceName+ " deleted successfully.");
+        rdt.setStatus(HttpStatus.OK.value());
+        rdt.setDescription(HttpStatus.OK.getReasonPhrase());
+        rdt.setMessage(resourceName+ "deleted successfully.");
         return rdt;
     }
 
@@ -244,10 +245,9 @@ public class IRentBookImpl implements IRentBookService {
         bookRent.getBook().setAvailable(bookRent.getBook().getAvailable()+ bookRent.getQuantity());
         bookRentRepository.save(bookRent);
         ResponseDto rsp = new ResponseDto();
-        rsp.setStatus(200);
-        rsp.setDescription("Ok");
+        rsp.setStatus(HttpStatus.OK.value());
+        rsp.setDescription(HttpStatus.OK.getReasonPhrase());
         rsp.setMessage("Book rent details updated successfully.");
-        rsp.setApiPath("uri=/api/return");
         return rsp;
     }
 

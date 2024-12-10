@@ -1,6 +1,6 @@
 package com.uexcel.library.exception;
 
-import com.uexcel.library.dto.ResponseDto;
+import com.uexcel.library.dto.ErrorResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -43,36 +43,36 @@ private final Logger logger = LoggerFactory.getLogger(GlobalException.class);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ResponseDto>
+    public ResponseEntity<ErrorResponseDto>
     handleUnauthorizedException(UnauthorizedException e, WebRequest webRequest) {
         return   ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                new ResponseDto(getTime(),401,"Unauthorized",
+                new ErrorResponseDto(getTime(),401,"Unauthorized",
                         e.getMessage(),webRequest.getDescription(false)));
     }
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ResponseDto>
+    public ResponseEntity<ErrorResponseDto>
     handleResourceNotFoundException(ResourceNotFoundException e, WebRequest webRequest) {
       return   ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseDto(getTime(),404,"Not Found",
+                new ErrorResponseDto(getTime(),404,"Not Found",
                         e.getMessage(),webRequest.getDescription(false)));
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ResponseDto>
+    public ResponseEntity<ErrorResponseDto>
     handleRunningRentException(BadRequestException e, WebRequest webRequest) {
         return   ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new ResponseDto(getTime(),400,"Bad Request",
+                new ErrorResponseDto(getTime(),400,"Bad Request",
                         e.getMessage(),webRequest.getDescription(false)));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseDto>
+    public ResponseEntity<ErrorResponseDto>
     handleExceptions(Exception e, WebRequest webRequest) {
         logger.debug(e.getMessage(),e);
         return   ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new ResponseDto(getTime(),500,"Internal Server Error",
+                new ErrorResponseDto(getTime(),500,"Internal Server Error",
                         "We encountered an error. Please try again or contact support for more information.",
                         webRequest.getDescription(false)));
     }

@@ -2,6 +2,7 @@ package com.uexcel.library.controller;
 
 import com.uexcel.library.admin.Admin;
 import com.uexcel.library.dto.EmployeeDto;
+import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.service.IEmployeeService;
@@ -39,11 +40,11 @@ public class EmployeeController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -65,11 +66,11 @@ public class EmployeeController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -91,11 +92,11 @@ public class EmployeeController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -119,11 +120,11 @@ public class EmployeeController {
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
@@ -141,15 +142,15 @@ public class EmployeeController {
             responses = {
                     @ApiResponse(
                             responseCode = "200", description = "Ok",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "400", description = "Bad Request",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     ),
                     @ApiResponse(
                             responseCode = "500", description = "Internal Server Error",
-                            content = @Content(schema = @Schema(implementation = ResponseDto.class))
+                            content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
                     )
             }
     )
