@@ -1,4 +1,6 @@
 package com.uexcel.library.config;
+import com.uexcel.library.exceptionhandling.CustomAccessDeniedHandler;
+import com.uexcel.library.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,16 +22,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http
+                .requiresChannel(rcc->rcc.anyRequest().requiresSecure()) //will accept only https request
                 .csrf(csrf->csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                         .ignoringRequestMatchers("/h2-console/**")
                 )
                 .authorizeHttpRequests(
-                        r->r.requestMatchers("/h2-console/**","/data-api","/api/csrf-token")
-                                .permitAll()
+                        r->r.requestMatchers("/h2-console/**","/data-api").hasAuthority("ADMIN")
                                 .requestMatchers("/swagger-ui/**","/v3/api-doc*/**","/error").permitAll()
-                                .requestMatchers("/api/fetch-all-books").permitAll()
+                                .requestMatchers("/api/fetch-all-books","/api/csrf-token").permitAll()
                                 .requestMatchers("/api/delete-book","/api/delete-user").hasAuthority("ADMIN")
                                 .requestMatchers("/api/update-book","/api/update-user").hasAuthority("ADMIN")
                                 .requestMatchers("api/add-employee","/api/fetch-employee").hasAuthority("ADMIN")
@@ -37,7 +39,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/pwd-chg-admin").hasAuthority("ADMIN")
                                 .anyRequest().authenticated())
                 .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .httpBasic(withDefaults())
+                .httpBasic(hbc->hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
+                .exceptionHandling(ec->ec.accessDeniedHandler(new CustomAccessDeniedHandler()))
                 .formLogin(withDefaults())
                 .build();
 

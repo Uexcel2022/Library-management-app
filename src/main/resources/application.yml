@@ -55,9 +55,10 @@ info:
     version: "0.0.1"
 
 springdoc:
-  api-docs:
-    enabled: true
   swagger-ui:
     csrf:
       enabled: true
-
+server:
+  servlet:
+    session:
+      timeout: ${SESSION_TIMEOUT:10m}
