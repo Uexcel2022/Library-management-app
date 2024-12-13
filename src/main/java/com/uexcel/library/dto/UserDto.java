@@ -12,6 +12,7 @@ import lombok.ToString;
 @Schema(name = "LibraryUser",description = "This schema will hold information about the user.")
 @Getter @Setter @ToString
 public class UserDto {
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String id;
     @NotNull(message = "first name is required.")
     @NotEmpty(message = "first name is required.")
