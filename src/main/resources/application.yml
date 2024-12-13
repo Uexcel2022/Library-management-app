@@ -45,7 +45,7 @@ employee:
   lastName: ${LAST_NAME:Jokin}
   phoneNumber : ${PHONE_NUMBER:09088108115}
   email: ${EMAIL:steven@yahoo.com}
-  password: ${PASSWORD:steven}
+  password: ${PASSWORD:!12x3#4%}
   role: ${ROLE:ADMIN}
 
 info:

@@ -46,9 +46,9 @@ public class LibraryUserController {
     )
 
     @PostMapping("/create-user")
-    public ResponseEntity<ErrorResponseDto> createUser(@Valid @RequestBody UserDto userDto){
-        ErrorResponseDto lib = userService.createUser(userDto);
-        return ResponseEntity.status(lib.getStatus()).body(lib);
+    public ResponseEntity<ResponseDto> createUser(@Valid @RequestBody UserDto userDto){
+        ResponseDto rs = userService.createUser(userDto);
+        return ResponseEntity.status(rs.getStatus()).body(rs);
     }
 
     @Operation(

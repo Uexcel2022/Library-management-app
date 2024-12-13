@@ -12,7 +12,8 @@ import static com.uexcel.library.service.IBookService.getTime;
 
 public class CustomBasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) throws IOException, ServletException {
         response.setHeader("wisdom-spring-library", "Authentication Failed");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         String msg = (authException != null && authException.getMessage()!=null)?

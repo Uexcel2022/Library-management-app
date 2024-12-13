@@ -3,7 +3,6 @@ package com.uexcel.library.service;
 import com.uexcel.library.Entity.LibraryUser;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.dto.UserDto;
-import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.exception.ResourceNotFoundException;
 
 public interface ILibraryUserService {
@@ -11,7 +10,7 @@ public interface ILibraryUserService {
      * @param userDto - contains user information
      * @return status and message
      */
-    ErrorResponseDto createUser(UserDto userDto);
+    ResponseDto createUser(UserDto userDto);
 
 
     UserDto fetchUser(String phoneNumber);

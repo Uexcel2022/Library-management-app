@@ -26,13 +26,13 @@ public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
      * @return status and message
      */
     @Override
-    public ErrorResponseDto createUser(UserDto lud) {
+    public ResponseDto createUser(UserDto lud) {
         if (lud == null){
             throw new BadRequestException("Library user input is null.");
         }
         checkForExistUser(lud.getPhoneNumber(), lud.getEmail());
 
-        ErrorResponseDto rsp = new ErrorResponseDto();
+        ResponseDto rsp = new ResponseDto();
         libraryUserRepository.save(UserMapper.mapToUser(lud,new LibraryUser()));
 
         rsp.setStatus(HttpStatus.CREATED.value());

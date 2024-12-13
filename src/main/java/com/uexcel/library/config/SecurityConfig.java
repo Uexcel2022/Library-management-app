@@ -1,6 +1,7 @@
 package com.uexcel.library.config;
 import com.uexcel.library.exceptionhandling.CustomAccessDeniedHandler;
 import com.uexcel.library.exceptionhandling.CustomBasicAuthenticationEntryPoint;
+import com.uexcel.library.handler.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -13,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -20,8 +22,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Profile("prod")
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
         return http
+                .sessionManagement(smc->smc.invalidSessionUrl("/invalidSession")
+                        .maximumSessions(2).maxSessionsPreventsLogin(true))
                 .requiresChannel(rcc->rcc.anyRequest().requiresSecure()) //will accept only https request
                 .csrf(csrf->csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -42,7 +46,11 @@ public class SecurityConfig {
                 .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .httpBasic(hbc->hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
                 .exceptionHandling(ec->ec.accessDeniedHandler(new CustomAccessDeniedHandler()))
-                .formLogin(withDefaults())
+                .formLogin(flc->flc.loginPage("/login").successHandler(customAuthenticationSuccessHandler)
+                        .failureUrl("/login?error=fail"))
+                .logout(loc -> loc.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .invalidateHttpSession(true).clearAuthentication(true)
+                        .deleteCookies("JSESSIONID").logoutSuccessUrl("/login?logout=true"))
                 .build();
 
     }

@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.authentication.password.CompromisedPasswordChecker;
+import org.springframework.security.authentication.password.CompromisedPasswordException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
@@ -19,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 public class LibraryApplication {
 	private final EmployeeRepository employeeRepository;
+	private final CompromisedPasswordChecker cPC;
 	private final Admin lAdmin;
 	private final PasswordEncoder passwordEncoder;
 	public static void main(String[] args) {
@@ -26,9 +29,13 @@ public class LibraryApplication {
 	}
 	@PostConstruct
 	public void  addAdMin(){
+		if(cPC.check(lAdmin.getPassword()).isCompromised()){
+			throw new CompromisedPasswordException(
+					String.format("Password '%s' is compromised.", lAdmin.getPassword())
+			);
+		}
 		lAdmin.setPassword(passwordEncoder.encode(lAdmin.getPassword()));
-		employeeRepository.save(EmployeeMapper
-				.mapToNewEmp(lAdmin,new Employee()));
+		employeeRepository.save(EmployeeMapper.mapToNewEmp(lAdmin,new Employee()));
 	}
 
 }
