@@ -1,12 +1,13 @@
 package com.uexcel.library.config;
+
 import com.uexcel.library.exceptionhandling.CustomAccessDeniedHandler;
 import com.uexcel.library.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import com.uexcel.library.handler.CustomAuthenticationSuccessHandler;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -20,9 +21,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @Profile("!prod")
+@AllArgsConstructor
 public class SecurityConfigNotProd {
+    private final  CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http
                 .sessionManagement(smc->smc.invalidSessionUrl("/login?error=invalidSession")
                         .maximumSessions(3).maxSessionsPreventsLogin(true)) //can add expired url
@@ -33,10 +36,9 @@ public class SecurityConfigNotProd {
                         .ignoringRequestMatchers("/h2-console/**")
                 )
                 .authorizeHttpRequests(
-                        r->r.requestMatchers("/h2-console/**","/data-api","/api/csrf-token","/error","/dashboard","/documentation")
-                                .permitAll()
+                        r->r.requestMatchers("/h2-console/**","/data-api","/api/csrf-token").permitAll()
+                                .requestMatchers("/api/fetch-all-books","/login/**","/error").permitAll()
                                 .requestMatchers("/swagger-ui/**","/v3/api-doc*/**").hasAuthority("ADMIN")
-                                .requestMatchers("/api/fetch-all-books","/login/**").permitAll()
                                 .requestMatchers("/api/delete-book","/api/delete-user").hasAuthority("ADMIN")
                                 .requestMatchers("/api/update-book","/api/update-user").hasAuthority("ADMIN")
                                 .requestMatchers("api/add-employee","/api/fetch-employee").hasAuthority("ADMIN")

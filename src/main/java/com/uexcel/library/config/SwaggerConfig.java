@@ -1,16 +1,18 @@
 package com.uexcel.library.config;
 
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
+@AllArgsConstructor
 public class SwaggerConfig {
-
+    private final Environment env;
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -23,7 +25,7 @@ public class SwaggerConfig {
                         .url("https://springboot.uexcel.github.org/docs"))
                 .externalDocs(new ExternalDocumentation()
                 .description("Logout")
-                        .url("http://localhost:8080/logout"));
+                        .url(env.getProperty("LOGOUT_PATH")));
 
     }
 }

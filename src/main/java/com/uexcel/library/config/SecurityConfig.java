@@ -2,6 +2,7 @@ package com.uexcel.library.config;
 import com.uexcel.library.exceptionhandling.CustomAccessDeniedHandler;
 import com.uexcel.library.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import com.uexcel.library.handler.CustomAuthenticationSuccessHandler;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,9 +19,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @Profile("prod")
+@AllArgsConstructor
 public class SecurityConfig {
+    private  final  CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http
                 .sessionManagement(smc->smc.invalidSessionUrl("/invalidSession")
                         .maximumSessions(2).maxSessionsPreventsLogin(true))
@@ -31,10 +34,9 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/h2-console/**")
                 )
                 .authorizeHttpRequests(
-                        r->r.requestMatchers("/h2-console/**","/data-api","/swagger-ui/**",
-                                        "/v3/api-doc*/**").hasAuthority("ADMIN")
-                                .requestMatchers("/error").permitAll()
-                                .requestMatchers("/api/fetch-all-books","/api/csrf-token").permitAll()
+                        r->r.requestMatchers("/h2-console/**","/data-api","/api/csrf-token").permitAll()
+                                .requestMatchers("/api/fetch-all-books","/login/**","/error").permitAll()
+                                .requestMatchers("/swagger-ui/**","/v3/api-doc*/**").hasAuthority("ADMIN")
                                 .requestMatchers("/api/delete-book","/api/delete-user").hasAuthority("ADMIN")
                                 .requestMatchers("/api/update-book","/api/update-user").hasAuthority("ADMIN")
                                 .requestMatchers("api/add-employee","/api/fetch-employee").hasAuthority("ADMIN")

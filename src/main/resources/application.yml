@@ -62,3 +62,5 @@ server:
   servlet:
     session:
       timeout: ${SESSION_TIMEOUT:10m}
+
+LOGOUT_PATH: http://localhost:8080/logout

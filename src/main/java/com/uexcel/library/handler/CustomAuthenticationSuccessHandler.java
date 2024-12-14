@@ -3,6 +3,7 @@ package com.uexcel.library.handler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 @Component
+@Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -22,6 +24,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             response.setHeader("X-XSRF-TOKEN",csrfToken.getToken());
             response.sendRedirect("/swagger-ui.html");
         } else {
+            log.error("Access denied user");
             response.sendRedirect("/login?error=access_denied");
         }
     }
