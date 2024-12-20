@@ -192,7 +192,7 @@ public class IRentBookImpl implements IRentBookService {
             return bookRentDtoList;
         }
 
-        if(bookId!=null && !returned) {
+        if(bookId!= null && !returned) {
             List<BookRent> rt = rents.stream().filter(vr-> vr.getBook().getId()
                     .equals(bookId) && !vr.isReturned()).toList();
             if (rt.isEmpty()) {

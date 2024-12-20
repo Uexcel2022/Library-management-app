@@ -23,7 +23,7 @@ public class LibraryUserDetailsService implements UserDetailsService {
       Employee emp = employeeRepository.findByEmailIgnoreCase(username);
       if (emp == null) {
           throw new UsernameNotFoundException(
-                  String.format("User not found with username: ",username)
+                  String.format("User not found with username: %s ",username)
           );
       }
       List<GrantedAuthority> authorities = emp.getAuthority().stream()

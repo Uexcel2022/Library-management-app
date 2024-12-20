@@ -39,9 +39,7 @@ public class LibraryApplication {
 	@Transactional
 	public void  addAdMin(){
 		if(lAdmin.getPassword().length() < 8 || lAdmin.getPassword().length()> 16){
-			throw new BadRequestException(
-					String.format("Password must be 8 - 16 characters.")
-			);
+			throw new BadRequestException("Password must be 8 - 16 characters.");
 		}
 
 		if(cPC.check(lAdmin.getPassword()).isCompromised()){

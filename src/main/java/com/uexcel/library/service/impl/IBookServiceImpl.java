@@ -1,18 +1,17 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.model.Book;
-import com.uexcel.library.model.Genre;
-import com.uexcel.library.dto.*;
-
+import com.uexcel.library.dto.BookDto;
+import com.uexcel.library.dto.BookRequestDto;
+import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.BookMapper;
+import com.uexcel.library.model.Book;
+import com.uexcel.library.model.Genre;
 import com.uexcel.library.repositoty.BookRepository;
 import com.uexcel.library.service.IBookService;
 import com.uexcel.library.service.IGenreService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,6 @@ public class IBookServiceImpl implements IBookService {
     private final BookRepository bookRepository;
     private final IGenreService genreService;
     private final DeleteUserBookRentService deleteUserBookRentService;
-    private final Logger logger = LoggerFactory.getLogger(IBookServiceImpl.class);
     /**
      * @param bookRequestDto - will hold book properties
      * @return - will hold response information
