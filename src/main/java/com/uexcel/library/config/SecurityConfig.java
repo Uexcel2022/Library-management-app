@@ -1,4 +1,5 @@
 package com.uexcel.library.config;
+
 import com.uexcel.library.exceptionhandling.CustomAccessDeniedHandler;
 import com.uexcel.library.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import com.uexcel.library.handler.CustomAuthenticationSuccessHandler;
@@ -8,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,7 +47,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/delete-employee","/api/delete-rent").hasAuthority("ADMIN")
                                 .requestMatchers("/api/pwd-chg-admin").hasAuthority("ADMIN")
                                 .anyRequest().authenticated())
-                .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+//                .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .httpBasic(hbc->hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
                 .exceptionHandling(ec->ec.accessDeniedHandler(new CustomAccessDeniedHandler()))
                 .formLogin(flc->flc.loginPage("/login").successHandler(customAuthenticationSuccessHandler)
