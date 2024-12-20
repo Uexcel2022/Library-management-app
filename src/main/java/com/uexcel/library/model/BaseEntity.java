@@ -1,4 +1,4 @@
-package com.uexcel.library.Entity;
+package com.uexcel.library.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;

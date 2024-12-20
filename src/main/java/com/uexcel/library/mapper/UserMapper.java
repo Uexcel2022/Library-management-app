@@ -1,6 +1,6 @@
 package com.uexcel.library.mapper;
 
-import com.uexcel.library.Entity.LibraryUser;
+import com.uexcel.library.model.LibraryUser;
 import com.uexcel.library.dto.UserDto;
 
 public class UserMapper {

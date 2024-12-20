@@ -1,7 +1,7 @@
 package com.uexcel.library.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.uexcel.library.Entity.Genre;
+import com.uexcel.library.model.Genre;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;

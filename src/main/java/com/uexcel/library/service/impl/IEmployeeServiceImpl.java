@@ -1,16 +1,19 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.Employee;
 import com.uexcel.library.admin.Admin;
+import com.uexcel.library.config.LibraryConstants;
 import com.uexcel.library.dto.EmployeeDto;
-import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.mapper.EmployeeMapper;
+import com.uexcel.library.model.Authority;
+import com.uexcel.library.model.Employee;
+import com.uexcel.library.repositoty.AuthorityRepository;
 import com.uexcel.library.repositoty.EmployeeRepository;
 import com.uexcel.library.service.IEmployeeService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,14 +23,14 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.uexcel.library.service.IBookService.getTime;
-
 @Service
 @AllArgsConstructor
+@Slf4j
 public class IEmployeeServiceImpl implements IEmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final CompromisedPasswordChecker passwordChecker;
+    private final AuthorityRepository authorityRepository;
 
     @Override
     public ResponseDto addEmployee(EmployeeDto empDto) {
@@ -44,12 +47,19 @@ public class IEmployeeServiceImpl implements IEmployeeService {
 
         checkEmployeeNotExist(empDto.getPhoneNumber(), empDto.getEmail());
         empDto.setPassword(passwordEncoder.encode(empDto.getPassword()));
-        employeeRepository.save(EmployeeMapper.mapToNewEmp(empDto,new Employee()));
-        ResponseDto rs = new ResponseDto();
-        rs.setStatus(HttpStatus.CREATED.value());
-        rs.setDescription(HttpStatus.CREATED.getReasonPhrase());
-        rs.setMessage("Employee created Successfully.");
-        return rs;
+        Employee employee = EmployeeMapper.mapToNewEmp(empDto,new Employee());
+        Authority authority = new Authority();
+        authority.setName(LibraryConstants.USER);
+        authority.setEmployee(employee);
+        Authority savedAuth = authorityRepository.save(authority);
+        if(savedAuth.getId()>1) {
+            ResponseDto rs = new ResponseDto();
+            rs.setStatus(HttpStatus.CREATED.value());
+            rs.setDescription(HttpStatus.CREATED.getReasonPhrase());
+            rs.setMessage("Employee created Successfully.");
+            return rs;
+        }
+        throw new BadRequestException("Failed to add employee.");
     }
 
     @Override
@@ -121,9 +131,13 @@ public class IEmployeeServiceImpl implements IEmployeeService {
         if(emp == null) {
             throw  new BadRequestException("Employee not found given input data phoneNumber: " + phoneNumber);
         }
+
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(emp.getRole().equalsIgnoreCase("ADMIN") || !emp.getEmail().equalsIgnoreCase(name)) {
-            throw  new BadRequestException("You are not authorized to access this employee.");
+        boolean isAdmin = !emp.getAuthority().stream().anyMatch(authority->authority.getName().equals("ROLE_ADMIN"));
+
+        if(!isAdmin && !emp.getEmail().equalsIgnoreCase(name)) {
+            log.debug("Username {} denied access to other employee's details.", name );
+            throw  new BadRequestException("You are not authorized to access this resource.");
         }
 
         return EmployeeMapper.mapToLibAdmin(new Admin(), emp);

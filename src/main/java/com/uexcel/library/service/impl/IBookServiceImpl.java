@@ -1,7 +1,7 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.Book;
-import com.uexcel.library.Entity.Genre;
+import com.uexcel.library.model.Book;
+import com.uexcel.library.model.Genre;
 import com.uexcel.library.dto.*;
 
 import com.uexcel.library.exception.BadRequestException;

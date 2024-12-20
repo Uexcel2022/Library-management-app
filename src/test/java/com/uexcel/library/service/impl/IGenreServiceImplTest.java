@@ -1,6 +1,6 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.Genre;
+import com.uexcel.library.model.Genre;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.repositoty.GenreRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +10,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 

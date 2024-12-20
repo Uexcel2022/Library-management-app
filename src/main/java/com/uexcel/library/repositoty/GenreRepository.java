@@ -1,6 +1,6 @@
 package com.uexcel.library.repositoty;
 
-import com.uexcel.library.Entity.Genre;
+import com.uexcel.library.model.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

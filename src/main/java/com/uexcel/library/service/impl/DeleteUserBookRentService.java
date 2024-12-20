@@ -1,9 +1,8 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.Book;
-import com.uexcel.library.Entity.LibraryUser;
-import com.uexcel.library.Entity.BookRent;
-import com.uexcel.library.dto.ErrorResponseDto;
+import com.uexcel.library.model.Book;
+import com.uexcel.library.model.LibraryUser;
+import com.uexcel.library.model.BookRent;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;
@@ -18,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-import static com.uexcel.library.service.IBookService.getTime;
 
 @Component
 @AllArgsConstructor

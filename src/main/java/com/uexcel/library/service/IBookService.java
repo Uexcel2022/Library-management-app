@@ -1,6 +1,6 @@
 package com.uexcel.library.service;
 
-import com.uexcel.library.Entity.Book;
+import com.uexcel.library.model.Book;
 import com.uexcel.library.dto.*;
 import com.uexcel.library.exception.ResourceNotFoundException;
 

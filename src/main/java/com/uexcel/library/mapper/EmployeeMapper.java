@@ -1,6 +1,6 @@
 package com.uexcel.library.mapper;
 
-import com.uexcel.library.Entity.Employee;
+import com.uexcel.library.model.Employee;
 import com.uexcel.library.admin.Admin;
 import com.uexcel.library.dto.EmployeeDto;
 import com.uexcel.library.dto.UserDto;
@@ -15,7 +15,6 @@ public class EmployeeMapper {
         employee.setPhoneNumber(employeeDto.getPhoneNumber());
         employee.setEmail(employeeDto.getEmail());
         employee.setPassword(employeeDto.getPassword());
-        employee.setRole("EMPLOYEE");
         return employee;
     }
 
@@ -37,7 +36,6 @@ public class EmployeeMapper {
         emp.setPhoneNumber(lAdmin.getPhoneNumber());
         emp.setEmail(lAdmin.getEmail());
         emp.setPassword(lAdmin.getPassword());
-        emp.setRole(lAdmin.getRole());
         emp.setPassword(lAdmin.getPassword());
         return emp;
     }
@@ -50,7 +48,6 @@ public class EmployeeMapper {
         lAdmin.setLastName(emp.getLastName());
         lAdmin.setPhoneNumber(emp.getPhoneNumber());
         lAdmin.setEmail(emp.getEmail());
-        lAdmin.setRole(emp.getRole());
         return lAdmin;
     }
 }

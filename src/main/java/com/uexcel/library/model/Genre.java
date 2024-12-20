@@ -1,4 +1,4 @@
-package com.uexcel.library.Entity;
+package com.uexcel.library.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;

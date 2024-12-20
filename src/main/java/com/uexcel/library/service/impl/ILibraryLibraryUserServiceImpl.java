@@ -1,17 +1,14 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.LibraryUser;
-import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.mapper.UserMapper;
+import com.uexcel.library.model.LibraryUser;
 import com.uexcel.library.repositoty.LibraryUserRepository;
 import com.uexcel.library.service.ILibraryUserService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class ILibraryLibraryUserServiceImpl implements ILibraryUserService {
     private final LibraryUserRepository libraryUserRepository;
     private final DeleteUserBookRentService deleteUserBookRentService;
-    private final Logger logger = LoggerFactory.getLogger(ILibraryLibraryUserServiceImpl.class);
     /**
      * @param lud - contains user information
      * @return status and message

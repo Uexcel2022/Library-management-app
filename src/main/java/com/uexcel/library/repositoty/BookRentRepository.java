@@ -1,8 +1,8 @@
 package com.uexcel.library.repositoty;
 
-import com.uexcel.library.Entity.Book;
-import com.uexcel.library.Entity.LibraryUser;
-import com.uexcel.library.Entity.BookRent;
+import com.uexcel.library.model.Book;
+import com.uexcel.library.model.LibraryUser;
+import com.uexcel.library.model.BookRent;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

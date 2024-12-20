@@ -1,7 +1,7 @@
 package com.uexcel.library.mapper;
 
 
-import com.uexcel.library.Entity.BookRent;
+import com.uexcel.library.model.BookRent;
 import com.uexcel.library.dto.BookDto;
 import com.uexcel.library.dto.BookRentRequestDto;
 import com.uexcel.library.dto.UserDto;

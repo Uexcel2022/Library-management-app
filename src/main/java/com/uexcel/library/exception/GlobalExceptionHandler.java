@@ -23,8 +23,8 @@ import java.util.Map;
 import static com.uexcel.library.service.IBookService.getTime;
 
 @RestControllerAdvice
-public class GlobalException extends ResponseEntityExceptionHandler {
-private final Logger logger = LoggerFactory.getLogger(GlobalException.class);
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     @Nullable
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders
             headers, HttpStatusCode status, WebRequest request) {

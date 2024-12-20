@@ -1,6 +1,6 @@
 package com.uexcel.library.service;
 
-import com.uexcel.library.Entity.Genre;
+import com.uexcel.library.model.Genre;
 
 public interface IGenreService {
 

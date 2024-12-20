@@ -1,6 +1,6 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.Genre;
+import com.uexcel.library.model.Genre;
 import com.uexcel.library.exception.ResourceNotFoundException;
 import com.uexcel.library.repositoty.GenreRepository;
 import com.uexcel.library.service.IGenreService;

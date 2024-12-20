@@ -1,7 +1,7 @@
 package com.uexcel.library.mapper;
 
-import com.uexcel.library.Entity.Book;
-import com.uexcel.library.Entity.Genre;
+import com.uexcel.library.model.Book;
+import com.uexcel.library.model.Genre;
 import com.uexcel.library.dto.BookRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

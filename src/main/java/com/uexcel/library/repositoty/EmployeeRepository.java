@@ -1,6 +1,6 @@
 package com.uexcel.library.repositoty;
 
-import com.uexcel.library.Entity.Employee;
+import com.uexcel.library.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

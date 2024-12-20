@@ -1,9 +1,8 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.Book;
-import com.uexcel.library.Entity.Genre;
+import com.uexcel.library.model.Book;
+import com.uexcel.library.model.Genre;
 import com.uexcel.library.dto.BookRequestDto;
-import com.uexcel.library.dto.ErrorResponseDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.repositoty.BookRepository;

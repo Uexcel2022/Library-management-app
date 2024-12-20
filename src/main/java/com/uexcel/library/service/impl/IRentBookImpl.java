@@ -1,8 +1,8 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.Book;
-import com.uexcel.library.Entity.BookRent;
-import com.uexcel.library.Entity.LibraryUser;
+import com.uexcel.library.model.Book;
+import com.uexcel.library.model.BookRent;
+import com.uexcel.library.model.LibraryUser;
 import com.uexcel.library.dto.*;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.ResourceNotFoundException;

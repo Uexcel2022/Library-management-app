@@ -1,6 +1,6 @@
 package com.uexcel.library.service;
 
-import com.uexcel.library.Entity.LibraryUser;
+import com.uexcel.library.model.LibraryUser;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.dto.UserDto;
 import com.uexcel.library.exception.ResourceNotFoundException;

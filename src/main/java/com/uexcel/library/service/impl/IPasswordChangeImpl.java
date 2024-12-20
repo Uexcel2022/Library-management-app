@@ -1,16 +1,16 @@
 package com.uexcel.library.service.impl;
 
-import com.uexcel.library.Entity.Employee;
+import com.uexcel.library.config.LibraryConstants;
 import com.uexcel.library.dto.AdminPasswordChangeDto;
 import com.uexcel.library.dto.PasswordChangeDto;
 import com.uexcel.library.dto.ResponseDto;
 import com.uexcel.library.exception.BadRequestException;
 import com.uexcel.library.exception.UnauthorizedException;
+import com.uexcel.library.model.Employee;
 import com.uexcel.library.repositoty.EmployeeRepository;
 import com.uexcel.library.service.IPasswordChangeService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class IPasswordChangeImpl implements IPasswordChangeService {
-    private final Logger logger = LoggerFactory.getLogger(IPasswordChangeImpl.class);
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
@@ -35,12 +35,12 @@ public class IPasswordChangeImpl implements IPasswordChangeService {
         Employee empAdmin = employeeRepository.findByEmailIgnoreCase(name);
 
         if(empAdmin == null){
-            logger.debug("User in the in security context holder not found in the database.");
+            log.debug("User in the in security context not found in the database.");
             throw new UnauthorizedException("You are not authorized to perform this operation");
         }
 
-        if(!empAdmin.getRole().equals("ADMIN")) {
-            logger.debug("Security threat user: {}", empAdmin.getEmail());
+        if(!empAdmin.getAuthority().stream().anyMatch(v->v.getName().equals(LibraryConstants.ADMIN))) {
+            log.debug("Username: {} denied access to change password", empAdmin.getEmail());
             throw new UnauthorizedException("You are not authorized to perform this operation.");
         }
 
@@ -69,7 +69,7 @@ public class IPasswordChangeImpl implements IPasswordChangeService {
         Employee emp = employeeRepository.findByEmailIgnoreCase(name);
 
         if(emp == null){
-            logger.debug("User in the in security context holder not found in the database.");
+            log.debug("User in the in security context holder not found in the database.");
             throw new UnauthorizedException("You are not authorized to perform this operation");
         }
 

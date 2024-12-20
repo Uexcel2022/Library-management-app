@@ -1,6 +1,6 @@
 package com.uexcel.library.mapper;
 
-import com.uexcel.library.Entity.Book;
+import com.uexcel.library.model.Book;
 import com.uexcel.library.dto.BookDto;
 import com.uexcel.library.dto.BookRequestDto;
 

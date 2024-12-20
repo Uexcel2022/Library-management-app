@@ -12,8 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter @Setter @ToString
 @Schema(name = "LibraryAdmin", description = "The schema will hold employee details in addition to role.")
 public class Admin extends UserDto {
-    private String role;
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
 
 }
