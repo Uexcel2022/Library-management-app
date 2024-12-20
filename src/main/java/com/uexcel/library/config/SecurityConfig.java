@@ -37,7 +37,8 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/h2-console/**")
                 )
                 .authorizeHttpRequests(
-                        r->r.requestMatchers("/h2-console/**","/data-api","/api/csrf-token").permitAll()
+                        r->r.requestMatchers("/h2-console/**","/data-api").hasAuthority("ADMIN")
+                                .requestMatchers("/api/csrf-token").permitAll()
                                 .requestMatchers("/api/fetch-all-books","/login/**","/error").permitAll()
                                 .requestMatchers("/swagger-ui/**","/v3/api-doc*/**").hasAuthority("ADMIN")
                                 .requestMatchers("/api/delete-book","/api/delete-user").hasAuthority("ADMIN")
