@@ -3,6 +3,8 @@ package com.uexcel.library.config;
 import com.uexcel.library.exceptionhandling.CustomAccessDeniedHandler;
 import com.uexcel.library.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import com.uexcel.library.filter.CsrfCookieFilter;
+import com.uexcel.library.filter.CustomAuthenticationLoggingFilter;
+import com.uexcel.library.filter.CustomRequestValidationFilter;
 import com.uexcel.library.handler.CustomAuthenticationSuccessHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +36,11 @@ public class SecurityConfigNotProd {
                 .sessionManagement(sessionConfig->sessionConfig.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .sessionManagement(smc->smc.invalidSessionUrl("/login?error=invalidSession")
                         .maximumSessions(3).maxSessionsPreventsLogin(true)) //can add expired url
+
+                .addFilterBefore(new CustomRequestValidationFilter(),BasicAuthenticationFilter.class)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new CustomAuthenticationLoggingFilter(),BasicAuthenticationFilter.class)
+
                 .requiresChannel(rcc->rcc.anyRequest().requiresInsecure())
                 .csrf(csrf->csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -51,6 +57,7 @@ public class SecurityConfigNotProd {
                                 .requestMatchers("/api/delete-employee","/api/delete-rent").hasRole("ADMIN")
                                 .requestMatchers("/api/pwd-chg-admin").hasRole("ADMIN")
                                 .anyRequest().authenticated())
+
                 .headers(frame->frame.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .httpBasic(hbc->hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
                 .exceptionHandling(ec->ec.accessDeniedHandler(new CustomAccessDeniedHandler()))

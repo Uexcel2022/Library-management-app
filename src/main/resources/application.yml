@@ -29,7 +29,8 @@ spring:
 
 logging:
   level:
-    com.uexcel: ${LOGGING_LEVEL_COM_UEXCEL:DEBUG}
+    com:
+      uexcel: ${LOGGING_LEVEL_COM_UEXCEL:DEBUG}
 management:
   endpoints:
     web:

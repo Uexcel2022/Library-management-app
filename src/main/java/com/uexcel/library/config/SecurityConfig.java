@@ -3,6 +3,8 @@ package com.uexcel.library.config;
 import com.uexcel.library.exceptionhandling.CustomAccessDeniedHandler;
 import com.uexcel.library.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import com.uexcel.library.filter.CsrfCookieFilter;
+import com.uexcel.library.filter.CustomAuthenticationLoggingFilter;
+import com.uexcel.library.filter.CustomRequestValidationFilter;
 import com.uexcel.library.handler.CustomAuthenticationSuccessHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +35,11 @@ public class SecurityConfig {
                 .sessionManagement(smc->smc.invalidSessionUrl("/login?error=invalidSession")
                         .maximumSessions(2).maxSessionsPreventsLogin(true))
                 .requiresChannel(rcc->rcc.anyRequest().requiresSecure()) //will accept only https request
+
+                .addFilterBefore(new CustomRequestValidationFilter(),BasicAuthenticationFilter.class)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new CustomAuthenticationLoggingFilter(),BasicAuthenticationFilter.class)
+
                 .csrf(csrf->csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
