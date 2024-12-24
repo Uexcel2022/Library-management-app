@@ -14,6 +14,7 @@ import com.uexcel.library.service.IRentBookService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ public class IRentBookImpl implements IRentBookService {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseDto returnBook(UserBookDto userBookDto, String rentId) {
         if(rentId != null && !rentId.isEmpty()){
             BookRent br = bookRentRepository.findById(rentId)

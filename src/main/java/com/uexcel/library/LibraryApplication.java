@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.authentication.password.CompromisedPasswordException;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.List;
 @EnableConfigurationProperties(Admin.class)
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 @AllArgsConstructor
+@EnableMethodSecurity(jsr250Enabled = true,securedEnabled = true)
 public class LibraryApplication {
 	private final CompromisedPasswordChecker cPC;
 	private final AuthorityRepository authorityRepository;

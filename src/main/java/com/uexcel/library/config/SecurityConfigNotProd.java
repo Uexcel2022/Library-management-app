@@ -6,6 +6,7 @@ import com.uexcel.library.filter.CsrfCookieFilter;
 import com.uexcel.library.filter.CustomAuthenticationLoggingFilter;
 import com.uexcel.library.filter.CustomRequestValidationFilter;
 import com.uexcel.library.handler.CustomAuthenticationSuccessHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 
 @Configuration
@@ -40,6 +46,20 @@ public class SecurityConfigNotProd {
                 .addFilterBefore(new CustomRequestValidationFilter(),BasicAuthenticationFilter.class)
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new CustomAuthenticationLoggingFilter(),BasicAuthenticationFilter.class)
+
+                .cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration config = new CorsConfiguration();
+                        config.setAllowCredentials(true);
+                        config.setAllowedOrigins(Collections.singletonList("https://localhost:3200"));
+                        config.setAllowedMethods(Collections.singletonList("*"));
+                        config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setExposedHeaders(Arrays.asList("Authorization"));
+                        config.setMaxAge(3600L);
+                        return config;
+                    }
+                }))
 
                 .requiresChannel(rcc->rcc.anyRequest().requiresInsecure())
                 .csrf(csrf->csrf

@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class DeleteUserBookRentService {
     private final Logger logger = LoggerFactory.getLogger(DeleteUserBookRentService.class);
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDto deleteRentBook(String resourceId, String resourceName) {
         if(resourceId == null){
             throw new BadRequestException("Input can not be null.");
